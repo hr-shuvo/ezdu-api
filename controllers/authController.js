@@ -14,7 +14,7 @@ export const register = async (req, res) => {
 
         await User.create(req.body);
 
-        return res.status(StatusCodes.CREATED).json({msg: 'User created'});
+        return res.status(StatusCodes.CREATED).json({msg: 'Registration complete'});
     } catch(error) {
         return res.status(500).json({msg: error.message});
     }

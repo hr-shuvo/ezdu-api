@@ -22,7 +22,7 @@ if(process.env.NODE_ENV === 'development') {
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({origin: process.env.CLIENT_URL, credentials: true}));
+app.use(cors({origin: process.env.CLIENT_URL.split(','), credentials: true}));
 
 app.get('/', (req, res) => {
     res.send('Hello World');
