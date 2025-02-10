@@ -82,3 +82,27 @@ export const validateLoginInput = withValidationErrors([
         .withMessage('password is required')
 ]);
 
+export const validateUpdateUserInput = withValidationErrors([
+    body('name')
+        .optional()
+        .isLength({min: 3, max: 50})
+        .withMessage('name must be at least 3 characters')
+        .trim(),
+    body('email')
+        .optional()
+        .isEmail()
+        .withMessage('email is invalid')
+        .custom(async (email, {req}) => {
+            const user = await User.findOne({email});
+
+            if (user && user._id.toString() !== req.user.userId) {
+                throw new BadRequestError('email already exists');
+            }
+        }),
+    body('password')
+        .optional()
+        .isLength({min: 4})
+        .withMessage('password must be at least 4 characters'),
+    body('lastName').notEmpty().withMessage('lastName is required').trim(),
+    body('location').notEmpty().withMessage('location is required').trim(),
+]);
