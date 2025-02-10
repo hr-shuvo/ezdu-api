@@ -22,7 +22,10 @@ if(process.env.NODE_ENV === 'development') {
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({origin: process.env.CLIENT_URL.split(','), credentials: true}));
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : process.env.CLIENT_URL_LOCAL,
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -48,7 +51,7 @@ const PORT = process.env.PORT || 5000;
 try {
     await mongoose.connect(process.env.MONGO_URL);
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(`Server is running on port ${PORT}, env: ${process.env.NODE_ENV}`);
     });
 } catch(e) {
     console.error(e);
