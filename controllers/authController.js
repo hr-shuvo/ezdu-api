@@ -1,8 +1,9 @@
-import User from "../models/auth/UserModel.js";
-import { comparePassword, hashPassword } from "../utils/passwordUtil.js";
+import User from '../models/UserModel.js';
 import { StatusCodes } from "http-status-codes";
+import { comparePassword, hashPassword } from "../utils/passwordUtils.js";
 import { UnAuthenticateError } from "../errors/customError.js";
 import { createJWT } from "../utils/tokenUtils.js";
+
 
 export const register = async (req, res) => {
     try {
@@ -14,7 +15,7 @@ export const register = async (req, res) => {
         await User.create(req.body);
 
         return res.status(StatusCodes.CREATED).json({msg: 'User created'});
-    } catch (error) {
+    } catch(error) {
         return res.status(500).json({msg: error.message});
     }
 };
@@ -23,12 +24,12 @@ export const login = async (req, res) => {
     const {email, password} = req.body;
 
     const user = await User.findOne({email});
-    if (!user) {
+    if(!user) {
         throw new UnAuthenticateError('Invalid credentials!');
     }
 
     const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
+    if(!isMatch) {
         throw new UnAuthenticateError('Invalid credentials!');
     }
 

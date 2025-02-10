@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -31,8 +32,7 @@ const UserSchema = new mongoose.Schema({
 
 });
 
-
-UserSchema.methods.toJSON = function () {
+UserSchema.methods.toJSON = function() {
     const user = this.toObject();
     delete user.password;
     return user;

@@ -1,16 +1,19 @@
-import User from "../models/auth/UserModel.js";
-import { body, validationResult } from "express-validator";
-import { BadRequestError, UnAuthorizedError } from "../errors/customError.js";
+import { body, param, validationResult } from "express-validator";
+import { BadRequestError, NotFoundError, UnAuthorizedError } from "../errors/customError.js";
+import { JOB_STATUS, JOB_TYPE } from "../utils/constants.js";
+import mongoose from "mongoose";
+import User from "../models/UserModel.js";
+
 
 const withValidationErrors = (validateValues) => {
     return [
         validateValues,
         (req, res, next) => {
             const errors = validationResult(req);
-            if (!errors.isEmpty()) {
+            if(!errors.isEmpty()) {
                 const errorMessages = errors.array().map((error) => error.msg);
 
-                if(errorMessages[0].startsWith('not authorized')){
+                if(errorMessages[0].startsWith('not authorized')) {
                     throw new UnAuthorizedError('not authorized to perform this action');
                 }
 
@@ -19,7 +22,28 @@ const withValidationErrors = (validateValues) => {
             next();
         }
     ];
+
 };
+
+export const validateTest = withValidationErrors([
+    body('name')
+        .notEmpty()
+        .withMessage('name is required')
+        .isLength({min: 3, max: 50})
+        .withMessage('name must be at least 3 characters')
+        .trim()
+]);
+
+export const validateIdParam = withValidationErrors([
+    param('id').custom(async (value, {req}) => {
+        const isValidId = mongoose.Types.ObjectId.isValid(value);
+
+        if(!isValidId) {
+            throw new BadRequestError('invalid MongoDB id');
+        }
+    })
+]);
+
 
 export const validateRegisterInput = withValidationErrors([
     body('name')
@@ -36,7 +60,7 @@ export const validateRegisterInput = withValidationErrors([
         .custom(async (email) => {
             const user = await User.findOne({email});
 
-            if (user) {
+            if(user) {
                 throw new BadRequestError('email already exists');
             }
         }),
@@ -57,3 +81,4 @@ export const validateLoginInput = withValidationErrors([
         .notEmpty()
         .withMessage('password is required')
 ]);
+
