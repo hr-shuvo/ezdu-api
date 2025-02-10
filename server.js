@@ -22,10 +22,19 @@ if(process.env.NODE_ENV === 'development') {
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : process.env.CLIENT_URL_LOCAL,
-    credentials: true
-}));
+
+const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Hello World');
