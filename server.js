@@ -41,7 +41,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/v1', (req, res) => {
-    res.json({msg: 'API is running'});
+    res.json({
+        msg: 'API is running',
+        environment: process.env.NODE_ENV,
+        production: process.env.NODE_ENV === 'production'
+    });
 });
 // Routers
 app.use('/api/v1/auth', authRouter);
@@ -60,7 +64,7 @@ const PORT = process.env.PORT || 5000;
 try {
     await mongoose.connect(process.env.MONGO_URL);
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}, env: ${process.env.NODE_ENV}`);
+        console.log(`Server is running on port ${PORT}`);
     });
 } catch(e) {
     console.error(e);
