@@ -4,9 +4,16 @@ import { NotFoundError } from "../errors/customError.js";
 
 
 export const getUserProgress = async (req, res) => {
-    const data = await UserProgress.findOne({userId: req.user.userId});
+    const data = await UserProgress.findOne({userId: req.user.userId})
+        .populate('activeCourseId')
+        .lean();
 
-    console.log(data)
+    if(data.activeCourseId){
+        data.activeCourse = {...data.activeCourseId};
+        data.activeCourseId = data.activeCourse._id;
+    }
+
+    // console.log(data);
 
     if(!data) {
         throw new NotFoundError('user progress not found')
