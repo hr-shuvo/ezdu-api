@@ -1,5 +1,5 @@
 
-import Course from '../models/CourseModel.js'
+import { Course } from '../models/CourseModel.js'
 import { StatusCodes } from "http-status-codes";
 
 export const loadCourses = async (req, res) =>{
