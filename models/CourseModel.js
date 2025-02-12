@@ -49,6 +49,13 @@ const challengeOptionSchema = new mongoose.Schema({
     audioSrc: {type: String},
 });
 
+const challengeProgressSchema = new mongoose.Schema({
+    // id: {type: Number, required: true, unique: true},
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    challengeId: {type: mongoose.Schema.Types.ObjectId, ref: "Challenge", required: true},
+    completed: {type: Boolean, default: false},
+});
+
 
 
 const Module =  mongoose.model('Module', moduleSchema);
@@ -58,6 +65,7 @@ const Unit = mongoose.model("Unit", unitSchema);
 const Lesson = mongoose.model("Lesson", lessonSchema);
 const Challenge = mongoose.model("Challenge", challengeSchema);
 const ChallengeOption = mongoose.model("ChallengeOption", challengeOptionSchema);
+const ChallengeProgress = mongoose.model("ChallengeProgress", challengeProgressSchema);
 
 
 export {
@@ -67,7 +75,8 @@ export {
     Unit,
     Lesson,
     Challenge,
-    ChallengeOption
+    ChallengeOption,
+    ChallengeProgress
 }
 
 

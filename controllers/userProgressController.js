@@ -1,23 +1,11 @@
 import { UserProgress } from "../models/CourseModel.js";
 import { StatusCodes } from "http-status-codes";
-import { NotFoundError } from "../errors/customError.js";
+import { _getUserProgress } from "../services/userProgress.js";
 
 
 export const getUserProgress = async (req, res) => {
-    const data = await UserProgress.findOne({userId: req.user.userId})
-        .populate('activeCourseId')
-        .lean();
 
-    if(data.activeCourseId){
-        data.activeCourse = {...data.activeCourseId};
-        data.activeCourseId = data.activeCourse._id;
-    }
-
-    // console.log(data);
-
-    if(!data) {
-        throw new NotFoundError('user progress not found')
-    }
+    const data = await _getUserProgress(req.user.userId);
 
     res.status(StatusCodes.OK).json(data);
 };
