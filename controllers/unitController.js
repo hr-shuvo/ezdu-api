@@ -57,20 +57,20 @@ export const loadUnits = async (req, res) => {
                 },
             },
 
-            {
-                $addFields: {
-                    "lessons.challenges.progress": {
-                        $ifNull: [
-                            { $arrayElemAt: ["$lessons.challenges.progress", 0] },
-                            {
-                                userId: req.user.userId,
-                                challengeId: "$lessons.challenges._id",
-                                completed: false
-                            }
-                        ]
-                    },
-                },
-            },
+            // {
+            //     $addFields: {
+            //         "lessons.challenges.progress": {
+            //             $ifNull: [
+            //                 { $arrayElemAt: ["$lessons.challenges.progress", 0] },
+            //                 {
+            //                     userId: req.user.userId,
+            //                     challengeId: "$lessons.challenges._id",
+            //                     completed: false
+            //                 }
+            //             ]
+            //         },
+            //     },
+            // },
 
 
             // group lessons back together
