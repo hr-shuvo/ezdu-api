@@ -11,6 +11,7 @@ import { authenticateUser } from "./middleware/authMiddleware.js";
 import userRouter from "./routes/userRouter.js";
 import courseRoute from "./routes/courseRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
+import { seedData } from "./utils/seedData.js";
 
 
 dotenv.config();
@@ -50,6 +51,7 @@ app.get('/api/v1', (req, res) => {
     });
 });
 // Routers
+app.get('/api/v1/seed', seedData);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/courses', authenticateUser, courseRoute);
