@@ -13,7 +13,7 @@ export const loadUnits = async (req, res) => {
 
         const data = await Unit.aggregate([
             {
-                $match: { courseId: userProgress.activeCourseId }
+                $match: {courseId: userProgress.activeCourseId}
             },
             {
                 $lookup: {
@@ -23,7 +23,7 @@ export const loadUnits = async (req, res) => {
                     as: "lessons"
                 }
             },
-            { $unwind: { path: "$lessons", preserveNullAndEmptyArrays: true } },
+            {$unwind: {path: "$lessons", preserveNullAndEmptyArrays: true}},
             {
                 $lookup: {
                     from: "challenges",
@@ -32,7 +32,8 @@ export const loadUnits = async (req, res) => {
                     as: "lessons.challenges"
                 }
             },
-            { $unwind: { path: "$lessons.challenges", preserveNullAndEmptyArrays: true } },
+            {$unwind: {path: "$lessons.challenges", preserveNullAndEmptyArrays: true}},
+
             {
                 $lookup: {
                     from: "challengeoptions",
@@ -41,129 +42,129 @@ export const loadUnits = async (req, res) => {
                     as: "lessons.challenges.options"
                 }
             },
-            // ✅ Group challenges inside each lesson
+
             {
-                $group: {
-                    _id: "$lessons._id",
-                    title: { $first: "$lessons.title" },
-                    order: { $first: "$lessons.order" },
-                    unitId: { $first: "$_id" }, // Store unitId for later grouping
-                    unitTitle: { $first: "$title" }, // Store unitTitle for later grouping
-                    unitOrder: { $first: "$order" }, // Store unitOrder for later grouping
-                    challenges: {
-                        $push: {
-                            _id: "$lessons.challenges._id",
-                            type: "$lessons.challenges.type",
-                            question: "$lessons.challenges.question",
-                            order: "$lessons.challenges.order",
-                            options: "$lessons.challenges.options"
+                $lookup: {
+                    from: "challengeprogresses", // Ensure correct collection name
+                    let: {challengeId: "$lessons.challenges._id"},
+                    pipeline: [
+                        {$match: {$expr: {$eq: ["$challengeId", "$$challengeId"]}}},
+                        {$match: {userId: req.user.userId}} // Match only for the logged-in user
+                    ],
+                    as: "lessons.challenges.progress"
+                }
+            },
+            {
+                $addFields: {
+                    "lessons.challenges.completed": {
+                        $cond: {
+                            if: {$gt: [{$size: "$lessons.challenges.progress"}, 0]},
+                            then: true,
+                            else: false
                         }
                     }
                 }
             },
-            // Group lessons inside each unit
             {
                 $group: {
-                    _id: "$unitId", // Now using unitId to group lessons under units
-                    title: { $first: "$unitTitle" },
-                    order: { $first: "$order" },
+                    _id: "$lessons._id",
+                    title: {$first: "$lessons.title"},
+                    order: {$first: "$lessons.order"},
+                    unitId: {$first: "$_id"},
+                    unitTitle: {$first: "$title"},
+                    unitOrder: {$first: "$order"},
+                    challenges: {$push: "$lessons.challenges"}
+                }
+            },
+            {
+                $addFields: {
+                    completed: {
+                        $cond: {
+                            if: {
+                                $eq: [
+                                    {
+                                        $size: {
+                                            $filter: {
+                                                input: "$challenges",
+                                                as: "c",
+                                                cond: {$eq: ["$$c.completed", true]}
+                                            }
+                                        }
+                                    },
+                                    {$size: "$challenges"}
+                                ]
+                            },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+            {$sort: {_id: 1}},
+            {
+                $group: {
+                    _id: "$unitId",
+                    title: {$first: "$unitTitle"},
+                    order: {$first: "$unitOrder"},
                     lessons: {
                         $push: {
                             _id: "$_id",
                             title: "$title",
-                            order: "$unitOrder",
-                            challenges: "$challenges"
+                            order: "$order",
+                            challenges: "$challenges",
+                            completed: "$completed"
                         }
                     }
                 }
             },
 
-            {$sort: {_id:1}}
-        ]);
+            {$sort: {_id: 1}},
+            //
+            //
+            // //  Group challenges inside each lesson
+            // {
+            //     $group: {
+            //         _id: "$lessons._id",
+            //         title: {$first: "$lessons.title"},
+            //         order: {$first: "$lessons.order"},
+            //         unitId: {$first: "$_id"}, // Store unitId for later grouping
+            //         unitTitle: {$first: "$title"}, // Store unitTitle for later grouping
+            //         unitOrder: {$first: "$order"}, // Store unitOrder for later grouping
+            //         challenges: {
+            //             $push: {
+            //                 _id: "$lessons.challenges._id",
+            //                 type: "$lessons.challenges.type",
+            //                 question: "$lessons.challenges.question",
+            //                 order: "$lessons.challenges.order",
+            //                 options: "$lessons.challenges.options"
+            //             },
+            //
+            //         },
+            //
+            //     }
+            // },
+            //
+            //
+            // {$sort: {_id: 1}},
+            // // Group lessons inside each unit
+            // {
+            //     $group: {
+            //         _id: "$unitId", // Now using unitId to group lessons under units
+            //         title: {$first: "$unitTitle"},
+            //         order: {$first: "$order"},
+            //         lessons: {
+            //             $push: {
+            //                 _id: "$_id",
+            //                 title: "$title",
+            //                 order: "$unitOrder",
+            //                 challenges: "$challenges"
+            //             }
+            //         }
+            //     }
+            // },
 
-        // const data = await Unit.aggregate([
-        //     {$match: {courseId: userProgress.activeCourseId}},
-        //     {
-        //         $lookup: {
-        //             from: "lessons",
-        //             localField: "_id",
-        //             foreignField: "unitId",
-        //             as: "lessons"
-        //         }
-        //     },
-        //     {
-        //         $unwind: {
-        //             path: "$lessons",
-        //             preserveNullAndEmptyArrays: true
-        //         }
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: "challenges",
-        //             localField: "lessons._id",
-        //             foreignField: "lessonId",
-        //             as: "lessons.challenges"
-        //         }
-        //     },
-        //     {
-        //         $unwind: {
-        //             path: "$lessons.challenges",
-        //             preserveNullAndEmptyArrays: true
-        //         }
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: "challengeoptions",
-        //             localField: "lessons.challenges._id",
-        //             foreignField: "challengeId",
-        //             as: "lessons.challenges.options"
-        //         }
-        //     },
-        //
-        //
-        //     {
-        //         $lookup:{
-        //             from: "challengeprogresses",
-        //             let: {challengeId: "$lessons.challenges._id"},
-        //             pipeline:[
-        //                 {
-        //                     $match:{
-        //                         $expr: {$eq: ["$challengeId", "$$challengeId"]},
-        //                         userId: req.user.userId
-        //                     }
-        //                 }
-        //             ],
-        //             as: "lessons.challenges.progress"
-        //         }
-        //
-        //     },
-        //
-        //
-        //     {
-        //         $group: {
-        //             _id: "$lessons._id",
-        //             title: { $first: "$lessons.title" },
-        //             order: { $first: "$lessons.order" },
-        //             challenges: { $push: "$lessons.challenges" }
-        //         }
-        //     },
-        //     {
-        //         $group: {
-        //             _id: "$_id",
-        //             title: { $first: "$title" },
-        //             order: { $first: "$order" },
-        //             lessons: { $push: {
-        //                     _id: "$_id",
-        //                     title: "$title",
-        //                     order: "$order",
-        //                     challenges: "$challenges"
-        //                 }}
-        //         }
-        //     },
-        //     {
-        //         $sort: {_id:1}
-        //     },
-        // ]);
+            {$sort: {_id: 1}}
+        ]);
 
 
         res.status(200).json(data);
