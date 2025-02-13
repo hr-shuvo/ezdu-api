@@ -13,6 +13,7 @@ import courseRoute from "./routes/courseRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
 import { seedData } from "./utils/seedData.js";
 import unitRouter from "./routes/unitRouter.js";
+import { ChallengeProgress } from "./models/CourseModel.js";
 
 
 dotenv.config();
@@ -40,7 +41,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+    // await ChallengeProgress.create({
+    //     userId: '67aa2b7ccefe6d9c8d01c971',
+    //     challengeId: '67aa2b7ccefe6d9c8d01c971',
+    //     completed: false
+    //
+    // })
+
     res.send('Hello World');
 });
 

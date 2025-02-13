@@ -507,17 +507,59 @@ export const MODULES = [
                                     {
                                         question: 'Solve for x: 2x + 3 = 11',
                                         options: [
-                                            {text: 'x = 5', correct: false},
-                                            {text: 'x = 4', correct: true},
-                                            {text: 'x = 3', correct: false}
+                                            { text: 'x = 5', correct: false },
+                                            { text: 'x = 4', correct: true },
+                                            { text: 'x = 3', correct: false }
                                         ]
                                     },
                                     {
                                         question: 'What is the value of x in the equation: 5x - 3 = 2x + 9?',
                                         options: [
-                                            {text: 'x = 4', correct: false},
-                                            {text: 'x = 6', correct: true},
-                                            {text: 'x = 2', correct: false}
+                                            { text: 'x = 4', correct: false },
+                                            { text: 'x = 6', correct: true },
+                                            { text: 'x = 2', correct: false }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Advanced Algebra Problems',
+                                challenge: [
+                                    {
+                                        question: 'Solve for x: 3x + 5 = 2x + 15',
+                                        options: [
+                                            { text: 'x = 5', correct: true },
+                                            { text: 'x = 4', correct: false },
+                                            { text: 'x = 3', correct: false }
+                                        ]
+                                    },
+                                    {
+                                        question: 'What is the value of x in the equation: 7x - 5 = 3x + 15?',
+                                        options: [
+                                            { text: 'x = 5', correct: false },
+                                            { text: 'x = 10', correct: true },
+                                            { text: 'x = 2', correct: false }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Linear Equations Review',
+                                challenge: [
+                                    {
+                                        question: 'What is the value of x in the equation: 4x - 7 = 9?',
+                                        options: [
+                                            { text: 'x = 4', correct: true },
+                                            { text: 'x = 3', correct: false },
+                                            { text: 'x = 5', correct: false }
+                                        ]
+                                    },
+                                    {
+                                        question: 'Solve for x: 8x + 4 = 12x + 20',
+                                        options: [
+                                            { text: 'x = -4', correct: true },
+                                            { text: 'x = 2', correct: false },
+                                            { text: 'x = 1', correct: false }
                                         ]
                                     }
                                 ]
