@@ -1,6 +1,6 @@
 import { Challenge, ChallengeOption, Course, Lesson, Module, Unit, UserProgress } from "../models/CourseModel.js";
 
-export const MODULES = [
+export const MODULES2 = [
     {
         title: 'ielts',
         courses: [
@@ -742,6 +742,98 @@ export const MODULES = [
 
 ];
 
+export const MODULES = [{
+    title: 'language',
+    courses: [
+        {
+            title: 'Spanish',
+            altCode: 'es',
+            units:[
+                {
+                    title: 'Unit 1',
+                    description: 'Basics of Spanish.',
+                    order: 1,
+                    lesson:[
+                        {
+                            order: 1,
+                            title: 'Nouns',
+                            challenges:[
+                                {
+                                    type: 'SELECT',
+                                    order: 1,
+                                    question: 'Which one of these is "the man"?',
+                                    options:[
+                                        {
+                                            option: 'el hombre',
+                                            correct: true,
+                                            imageSrc: '/man.svg',
+                                            audioSrc: '/es_man.mp3',
+                                        },
+                                        {
+                                            option: 'la mujer',
+                                            correct: false,
+                                            imageSrc: '/woman.svg',
+                                            audioSrc: '/es_woman.mp3',
+                                        },
+                                        {
+                                            option: 'el robot',
+                                            correct: false,
+                                            imageSrc: '/robot.svg',
+                                            audioSrc: '/es_robot.mp3',
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            order: 2,
+                            title: 'Pronouns',
+                        },
+                        {
+                            order: 3,
+                            title: 'Verbs',
+                        },
+                        {
+                            order: 4,
+                            title: 'Adjectives',
+                        },
+                        {
+                            order: 5,
+                            title: 'Grammar',
+                        },
+
+                        {
+                            order: 6,
+                            title: 'Verbs',
+                        },
+                        {
+                            order: 7,
+                            title: 'Adjectives',
+                        },
+                        {
+                            order: 8,
+                            title: 'Grammar',
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            title: 'Italian',
+            altCode: 'it',
+        },
+        {
+            title: 'French',
+            altCode: 'fr',
+        },
+        {
+            title: 'German',
+            altCode: 'de',
+        },
+    ]
+
+}];
+
 
 export const seedData = async (req, res) => {
     console.log('start seeding database...');
@@ -770,7 +862,6 @@ export const seedData = async (req, res) => {
                 title: module.title
             });
 
-
             for(const course of module.courses) {
                 const _course = await Course.create({
                     title: course.title,
@@ -778,6 +869,7 @@ export const seedData = async (req, res) => {
                 });
 
 
+                if(!course.units)continue;
                 for(const unit of course.units) {
                     const _unit = await Unit.create({
                         title: unit.title,
@@ -789,23 +881,29 @@ export const seedData = async (req, res) => {
                         const _lesson = await Lesson.create({
                             title: lesson.title,
                             unitId: _unit._id,
-                            order: 1
+                            order: lesson.order
                         });
 
-                        for(const challenge of lesson.challenge) {
+                        if(!lesson.challenges) continue;
+                        for(const challenge of lesson.challenges) {
+
                             const _challenge = await Challenge.create({
                                 lessonId: _lesson._id,
-                                type: 'SELECT',
+                                type: challenge.type,
                                 question: challenge.question,
-                                order: 1
+                                order: challenge.order
                             });
+
+                            // console.log(challenge);
+                            // return res.status(200).json({msg: 'done seeding database!!!'});
 
                             for(const option of challenge.options) {
                                 await ChallengeOption.create({
                                     challengeId: _challenge._id,
-                                    text: option.text,
-                                    correct: option.correct
-
+                                    text: option.option,
+                                    correct: option.correct,
+                                    imageSrc:option.imageSrc,
+                                    audioSrc:option.audioSrc
                                 });
                             }
                         }
