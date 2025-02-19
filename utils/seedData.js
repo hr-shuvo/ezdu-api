@@ -1,4 +1,13 @@
-import { Challenge, ChallengeOption, Course, Lesson, Module, Unit, UserProgress } from "../models/CourseModel.js";
+import {
+    Challenge,
+    ChallengeOption,
+    ChallengeProgress,
+    Course,
+    Lesson,
+    Module,
+    Unit,
+    UserProgress
+} from "../models/CourseModel.js";
 
 export const MODULES2 = [
     {
@@ -782,6 +791,56 @@ export const MODULES = [{
                                             audioSrc: '/es_robot.mp3',
                                         }
                                     ]
+                                },
+                                {
+                                    type: 'ASSIST',
+                                    order: 2,
+                                    question: '"the man"',
+                                    options:[
+                                        {
+                                            option: 'el hombre',
+                                            correct: true,
+                                            imageSrc: '/man.svg',
+                                            audioSrc: '/es_man.mp3',
+                                        },
+                                        {
+                                            option: 'la mujer',
+                                            correct: false,
+                                            imageSrc: '/woman.svg',
+                                            audioSrc: '/es_woman.mp3',
+                                        },
+                                        {
+                                            option: 'el robot',
+                                            correct: false,
+                                            imageSrc: '/robot.svg',
+                                            audioSrc: '/es_robot.mp3',
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: 'SELECT',
+                                    order: 3,
+                                    question: 'Which one of these is "the robot"?',
+                                    options:[
+                                        {
+                                            option: 'el hombre',
+                                            correct: false,
+                                            imageSrc: '/man.svg',
+                                            audioSrc: '/es_man.mp3',
+                                        },
+                                        {
+                                            option: 'la mujer',
+                                            correct: false,
+                                            imageSrc: '/woman.svg',
+                                            audioSrc: '/es_woman.mp3',
+                                        },
+                                        {
+                                            option: 'el robot',
+                                            correct: true,
+                                            imageSrc: '/robot.svg',
+                                            audioSrc: '/es_robot.mp3',
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -844,6 +903,7 @@ export const seedData = async (req, res) => {
             await Module.collection.drop();
             await Course.collection.drop();
             await UserProgress.collection.drop();
+            await ChallengeProgress.collection.drop();
             await Unit.collection.drop();
             await Lesson.collection.drop();
             await Challenge.collection.drop();

@@ -23,7 +23,7 @@ export const upsertChallengeProgress = async (req, res) => {
 
     const lessonId = challenge.lessonId;
 
-    const existingChallengeProgress = await ChallengeProgress.findOne({
+    let existingChallengeProgress = await ChallengeProgress.findOne({
         userId: req.user.userId,
         challengeId: challengeId
     });
@@ -46,7 +46,7 @@ export const upsertChallengeProgress = async (req, res) => {
     //
     // }
 
-    const cp = await ChallengeProgress.updateOne(
+    await ChallengeProgress.updateOne(
         {userId: req.user.userId, challengeId: challengeId},
         {$set: {completed: true}},
         {upsert: true}

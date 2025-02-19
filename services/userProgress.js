@@ -162,8 +162,8 @@ export const _getLesson = async (userId, id) => {
     const normalizedChallenges = data.challenges.map(challenge => {
         const completed = challenge.progress &&
             challenge.progress.length > 0 &&
-            challenge.progress.map(process => {
-                process.completed
+            challenge.progress.every(process => {
+                return process.completed === true
             });
 
         return {
