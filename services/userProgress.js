@@ -84,14 +84,14 @@ export const _getCourseProgress = async (userId) => {
                 lessons: {$push: "$$ROOT"}
             }
         },
-        {$sort: {_id: 1}} // Sort units by order
+        {$sort: {_id: 1}}
     ]);
 
     const firstUncompletedLesson = unitsInActiveCourse
-        .flatMap(unit => unit.lessons)  // Flatten lessons from all units into a single array
+        .flatMap(unit => unit.lessons)
         .find(lesson =>
             lesson.challenges.some(challenge =>
-                !challenge.challengeProgress || challenge.challengeProgress.length === 0
+                !challenge.progress || challenge.progress.length === 0
             )
         );
 
