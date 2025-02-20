@@ -847,6 +847,33 @@ export const MODULES = [{
                         {
                             order: 2,
                             title: 'Pronouns',
+                            challenges: [
+                                {
+                                    type: 'SELECT',
+                                    order: 1,
+                                    question: 'l2 - Which one of these is "the man"?',
+                                    options:[
+                                        {
+                                            option: 'el hombre',
+                                            correct: true,
+                                            imageSrc: '/man.svg',
+                                            audioSrc: '/es_man.mp3',
+                                        },
+                                        {
+                                            option: 'la mujer',
+                                            correct: false,
+                                            imageSrc: '/woman.svg',
+                                            audioSrc: '/es_woman.mp3',
+                                        },
+                                        {
+                                            option: 'el robot',
+                                            correct: false,
+                                            imageSrc: '/robot.svg',
+                                            audioSrc: '/es_robot.mp3',
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             order: 3,
