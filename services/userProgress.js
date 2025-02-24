@@ -105,8 +105,9 @@ export const _getCourseProgress = async (userId) => {
 export const _getLesson = async (userId, id) => {
     const courseProgress = await _getCourseProgress(userId);
 
-    // const lessonId = id || courseProgress.activeLessonId;
-    const lessonId = courseProgress.activeLessonId;
+
+    const lessonId = id ?? courseProgress.activeLessonId;
+    // const lessonId = courseProgress.activeLessonId;
 
     if(!lessonId) {
         return null;
@@ -114,7 +115,7 @@ export const _getLesson = async (userId, id) => {
 
     const lessons = await Lesson.aggregate([
         {
-            $match: {_id: new mongoose.Types.ObjectId(lessonId)} // Find the specific lesson
+            $match: {_id: new mongoose.Types.ObjectId(lessonId)}
         },
         {
             $lookup: {
@@ -124,14 +125,14 @@ export const _getLesson = async (userId, id) => {
                 as: "challenges"
             }
         },
-        {$unwind: {path: "$challenges", preserveNullAndEmptyArrays: true}}, // Keep lessons with no challenges
+        {$unwind: {path: "$challenges", preserveNullAndEmptyArrays: true}},
         {
             $lookup: {
                 from: "challengeprogresses",
                 localField: "challenges._id",
                 foreignField: "challengeId",
                 as: "challenges.progress",
-                pipeline: [{$match: {userId: new mongoose.Types.ObjectId(userId)}}] // Only fetch progress for user 123
+                pipeline: [{$match: {userId: new mongoose.Types.ObjectId(userId)}}]
             }
         },
         {
@@ -147,7 +148,7 @@ export const _getLesson = async (userId, id) => {
                 _id: "$_id",
                 title: {$first: "$title"},
                 order: {$first: "$order"},
-                challenges: {$push: "$challenges"} // Group challenges back into an array
+                challenges: {$push: "$challenges"}
             }
         }
     ]);

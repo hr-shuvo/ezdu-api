@@ -19,7 +19,7 @@ export const getCourseProgress = async (req, res) => {
 
 export const getLesson = async (req, res) => {
 
-    const data = await _getLesson(req.user.userId, req.params.id);
+    const data = await _getLesson(req.user.userId, req.query.id);
 
     res.status(StatusCodes.OK).json(data);
 };
