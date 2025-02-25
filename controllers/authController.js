@@ -36,24 +36,39 @@ export const login = async (req, res) => {
     const token = createJWT({userId: user._id, role: user.role});
 
     const oneDay = 24 * 60 * 60 * 1000;
+    // res.cookie('token', token, {
+    //     httpOnly: true,
+    //     expires: new Date(Date.now() + (oneDay * 7)),
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    // });
     res.cookie('token', token, {
+        path: '/',
         httpOnly: true,
-        expires: new Date(Date.now() + (oneDay * 7)),
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-    });
+        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        sameSite: 'none',
+        secure: true
+    })
 
     return res.status(StatusCodes.OK).json({msg: 'User logged in'});
 };
 
 export const logout = async (req, res) => {
-    res.clearCookie('token', 'logout', {
+    // res.clearCookie('token', 'logout', {
+    //     httpOnly: true,
+    //     expires: new Date(Date.now()),
+    //     // secure: process.env.NODE_ENV === 'production',
+    //     secure: true,
+    //     // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    //     sameSite: 'None',
+    // });
+
+    res.cookie('token', '', {
+        path: '/',
         httpOnly: true,
-        expires: new Date(Date.now()),
-        // secure: process.env.NODE_ENV === 'production',
-        secure: true,
-        // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-        sameSite: 'None',
+        expires: new Date(0),
+        sameSite: 'none',
+        secure: true
     });
 
     return res.status(StatusCodes.OK).json({msg: 'User logged out'});
