@@ -8,7 +8,7 @@ const router = Router();
 
 
 router.get('/', loadCourses);
-router.post('/create', createCourse);
+router.post('/create', authenticateUser, createCourse);
 
 
 
