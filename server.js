@@ -31,17 +31,25 @@ app.use(cookieParser());
 app.use(express.json());
 
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin) || origin === "null") {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    credentials: true,
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || allowedOrigins.includes(origin) || origin === "null") {
+//             callback(null, true);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
+//     },
+//     credentials: true,
+// };
+// app.use(cors(corsOptions));
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true
+    })
+)
+
 
 app.get('/', async (req, res) => {
     // await ChallengeProgress.create({
@@ -65,7 +73,7 @@ app.get('/api/v1', (req, res) => {
 app.get('/api/v1/seed', seedData);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
-app.use('/api/v1/courses', courseRoute);
+app.use('/api/v1/courses', authenticateUser, courseRoute);
 app.use('/api/v1/userProgress', authenticateUser, userProgressRoute);
 app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 app.use('/api/v1/userUnits', authenticateUser, unitRouter);

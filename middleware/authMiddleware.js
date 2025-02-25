@@ -3,10 +3,12 @@ import { verifyJWT } from "../utils/tokenUtils.js";
 
 export const authenticateUser = (req, res, next) => {
 
+
     const {token} = req.cookies;
     if(!token) {
         throw new UnAuthenticateError('You need to login to access this route');
     }
+    console.log('token: ', token)
 
     try {
         const {userId, role} = verifyJWT(token);
