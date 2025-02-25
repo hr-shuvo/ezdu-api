@@ -33,7 +33,7 @@ app.use(express.json());
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
 const corsOptions = {
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin) || origin === "null") {
             callback(null, true);
         } else {
             callback(new Error("Not allowed by CORS"));

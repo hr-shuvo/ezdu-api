@@ -40,7 +40,8 @@ export const login = async (req, res) => {
         httpOnly: true,
         expires: new Date(Date.now() + (oneDay * 7)),
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        domain: '.ezduonline.com'
     });
 
     return res.status(StatusCodes.OK).json({msg: 'User logged in'});
@@ -51,7 +52,8 @@ export const logout = async (req, res) => {
         httpOnly: true,
         expires: new Date(Date.now()),
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        domain: '.ezduonline.com'
     });
 
     return res.status(StatusCodes.OK).json({msg: 'User logged out'});
