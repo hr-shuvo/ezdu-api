@@ -2,7 +2,6 @@ import { UnAuthenticateError, UnAuthorizedError } from "../errors/customError.js
 import { verifyJWT } from "../utils/tokenUtils.js";
 
 export const authenticateUser = (req, res, next) => {
-    console.log('Authenticating user...');
 
     const {token} = req.cookies;
     if(!token) {
@@ -14,8 +13,10 @@ export const authenticateUser = (req, res, next) => {
 
         req.user = {userId, role};
 
+        console.log('Authenticating user...');
         next();
     } catch(e) {
+        console.error('Unauthorized');
         throw new UnAuthenticateError('You need to login to access this route');
     }
 }
