@@ -516,17 +516,17 @@ export const MODULES2 = [
                                     {
                                         question: 'Solve for x: 2x + 3 = 11',
                                         options: [
-                                            { text: 'x = 5', correct: false },
-                                            { text: 'x = 4', correct: true },
-                                            { text: 'x = 3', correct: false }
+                                            {text: 'x = 5', correct: false},
+                                            {text: 'x = 4', correct: true},
+                                            {text: 'x = 3', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'What is the value of x in the equation: 5x - 3 = 2x + 9?',
                                         options: [
-                                            { text: 'x = 4', correct: false },
-                                            { text: 'x = 6', correct: true },
-                                            { text: 'x = 2', correct: false }
+                                            {text: 'x = 4', correct: false},
+                                            {text: 'x = 6', correct: true},
+                                            {text: 'x = 2', correct: false}
                                         ]
                                     }
                                 ]
@@ -537,17 +537,17 @@ export const MODULES2 = [
                                     {
                                         question: 'Solve for x: 3x + 5 = 2x + 15',
                                         options: [
-                                            { text: 'x = 5', correct: true },
-                                            { text: 'x = 4', correct: false },
-                                            { text: 'x = 3', correct: false }
+                                            {text: 'x = 5', correct: true},
+                                            {text: 'x = 4', correct: false},
+                                            {text: 'x = 3', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'What is the value of x in the equation: 7x - 5 = 3x + 15?',
                                         options: [
-                                            { text: 'x = 5', correct: false },
-                                            { text: 'x = 10', correct: true },
-                                            { text: 'x = 2', correct: false }
+                                            {text: 'x = 5', correct: false},
+                                            {text: 'x = 10', correct: true},
+                                            {text: 'x = 2', correct: false}
                                         ]
                                     }
                                 ]
@@ -558,17 +558,17 @@ export const MODULES2 = [
                                     {
                                         question: 'What is the value of x in the equation: 4x - 7 = 9?',
                                         options: [
-                                            { text: 'x = 4', correct: true },
-                                            { text: 'x = 3', correct: false },
-                                            { text: 'x = 5', correct: false }
+                                            {text: 'x = 4', correct: true},
+                                            {text: 'x = 3', correct: false},
+                                            {text: 'x = 5', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'Solve for x: 8x + 4 = 12x + 20',
                                         options: [
-                                            { text: 'x = -4', correct: true },
-                                            { text: 'x = 2', correct: false },
-                                            { text: 'x = 1', correct: false }
+                                            {text: 'x = -4', correct: true},
+                                            {text: 'x = 2', correct: false},
+                                            {text: 'x = 1', correct: false}
                                         ]
                                     }
                                 ]
@@ -579,17 +579,17 @@ export const MODULES2 = [
                                     {
                                         question: 'Solve for x: 2x + 3 = 11',
                                         options: [
-                                            { text: 'x = 5', correct: false },
-                                            { text: 'x = 4', correct: true },
-                                            { text: 'x = 3', correct: false }
+                                            {text: 'x = 5', correct: false},
+                                            {text: 'x = 4', correct: true},
+                                            {text: 'x = 3', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'What is the value of x in the equation: 5x - 3 = 2x + 9?',
                                         options: [
-                                            { text: 'x = 4', correct: false },
-                                            { text: 'x = 6', correct: true },
-                                            { text: 'x = 2', correct: false }
+                                            {text: 'x = 4', correct: false},
+                                            {text: 'x = 6', correct: true},
+                                            {text: 'x = 2', correct: false}
                                         ]
                                     }
                                 ]
@@ -600,17 +600,17 @@ export const MODULES2 = [
                                     {
                                         question: 'Solve for x: 3x + 5 = 2x + 15',
                                         options: [
-                                            { text: 'x = 5', correct: true },
-                                            { text: 'x = 4', correct: false },
-                                            { text: 'x = 3', correct: false }
+                                            {text: 'x = 5', correct: true},
+                                            {text: 'x = 4', correct: false},
+                                            {text: 'x = 3', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'What is the value of x in the equation: 7x - 5 = 3x + 15?',
                                         options: [
-                                            { text: 'x = 5', correct: false },
-                                            { text: 'x = 10', correct: true },
-                                            { text: 'x = 2', correct: false }
+                                            {text: 'x = 5', correct: false},
+                                            {text: 'x = 10', correct: true},
+                                            {text: 'x = 2', correct: false}
                                         ]
                                     }
                                 ]
@@ -621,17 +621,17 @@ export const MODULES2 = [
                                     {
                                         question: 'What is the value of x in the equation: 4x - 7 = 9?',
                                         options: [
-                                            { text: 'x = 4', correct: true },
-                                            { text: 'x = 3', correct: false },
-                                            { text: 'x = 5', correct: false }
+                                            {text: 'x = 4', correct: true},
+                                            {text: 'x = 3', correct: false},
+                                            {text: 'x = 5', correct: false}
                                         ]
                                     },
                                     {
                                         question: 'Solve for x: 8x + 4 = 12x + 20',
                                         options: [
-                                            { text: 'x = -4', correct: true },
-                                            { text: 'x = 2', correct: false },
-                                            { text: 'x = 1', correct: false }
+                                            {text: 'x = -4', correct: true},
+                                            {text: 'x = 2', correct: false},
+                                            {text: 'x = 1', correct: false}
                                         ]
                                     }
                                 ]
@@ -751,174 +751,468 @@ export const MODULES2 = [
 
 ];
 
-export const MODULES = [{
-    title: 'language',
-    courses: [
-        {
-            title: 'Spanish',
-            altCode: 'es',
-            units:[
-                {
-                    title: 'Unit 1',
-                    description: 'Basics of Spanish.',
-                    order: 1,
-                    lesson:[
-                        {
-                            order: 1,
-                            title: 'Nouns',
-                            challenges:[
-                                {
-                                    type: 'SELECT',
-                                    order: 1,
-                                    question: 'Which one of these is "the man"?',
-                                    options:[
-                                        {
-                                            option: 'el hombre',
-                                            correct: true,
-                                            imageSrc: '/man.svg',
-                                            audioSrc: '/es_man.mp3',
-                                        },
-                                        {
-                                            option: 'la mujer',
-                                            correct: false,
-                                            imageSrc: '/woman.svg',
-                                            audioSrc: '/es_woman.mp3',
-                                        },
-                                        {
-                                            option: 'el robot',
-                                            correct: false,
-                                            imageSrc: '/robot.svg',
-                                            audioSrc: '/es_robot.mp3',
-                                        }
-                                    ]
-                                },
-                                {
-                                    type: 'ASSIST',
-                                    order: 2,
-                                    question: '"the man"',
-                                    options:[
-                                        {
-                                            option: 'el hombre',
-                                            correct: true,
-                                            imageSrc: '/man.svg',
-                                            audioSrc: '/es_man.mp3',
-                                        },
-                                        {
-                                            option: 'la mujer',
-                                            correct: false,
-                                            imageSrc: '/woman.svg',
-                                            audioSrc: '/es_woman.mp3',
-                                        },
-                                        {
-                                            option: 'el robot',
-                                            correct: false,
-                                            imageSrc: '/robot.svg',
-                                            audioSrc: '/es_robot.mp3',
-                                        }
-                                    ]
-                                },
-                                {
-                                    type: 'SELECT',
-                                    order: 3,
-                                    question: 'Which one of these is "the robot"?',
-                                    options:[
-                                        {
-                                            option: 'el hombre',
-                                            correct: false,
-                                            imageSrc: '/man.svg',
-                                            audioSrc: '/es_man.mp3',
-                                        },
-                                        {
-                                            option: 'la mujer',
-                                            correct: false,
-                                            imageSrc: '/woman.svg',
-                                            audioSrc: '/es_woman.mp3',
-                                        },
-                                        {
-                                            option: 'el robot',
-                                            correct: true,
-                                            imageSrc: '/robot.svg',
-                                            audioSrc: '/es_robot.mp3',
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            order: 2,
-                            title: 'Pronouns',
-                            challenges: [
-                                {
-                                    type: 'SELECT',
-                                    order: 1,
-                                    question: 'l2 - Which one of these is "the man"?',
-                                    options:[
-                                        {
-                                            option: 'el hombre',
-                                            correct: true,
-                                            imageSrc: '/man.svg',
-                                            audioSrc: '/es_man.mp3',
-                                        },
-                                        {
-                                            option: 'la mujer',
-                                            correct: false,
-                                            imageSrc: '/woman.svg',
-                                            audioSrc: '/es_woman.mp3',
-                                        },
-                                        {
-                                            option: 'el robot',
-                                            correct: false,
-                                            imageSrc: '/robot.svg',
-                                            audioSrc: '/es_robot.mp3',
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            order: 3,
-                            title: 'Verbs',
-                        },
-                        {
-                            order: 4,
-                            title: 'Adjectives',
-                        },
-                        {
-                            order: 5,
-                            title: 'Grammar',
-                        },
+export const MODULES = [
+    {
+        title: 'language',
+        courses: [
+            {
+                title: 'Spanish language',
+                altCode: 'es',
+                units: [
+                    {
+                        title: 'Unit 1',
+                        description: 'Basics of Spanish.',
+                        order: 1,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: 'Nouns',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: 'Which one of these is "the man"?',
+                                        options: [
+                                            {
+                                                option: 'el hombre',
+                                                correct: true,
+                                                imageSrc: '/man.svg',
+                                                audioSrc: '/es_man.mp3',
+                                            },
+                                            {
+                                                option: 'la mujer',
+                                                correct: false,
+                                                imageSrc: '/woman.svg',
+                                                audioSrc: '/es_woman.mp3',
+                                            },
+                                            {
+                                                option: 'el robot',
+                                                correct: false,
+                                                imageSrc: '/robot.svg',
+                                                audioSrc: '/es_robot.mp3',
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'ASSIST',
+                                        order: 2,
+                                        question: '"the man"',
+                                        options: [
+                                            {
+                                                option: 'el hombre',
+                                                correct: true,
+                                                imageSrc: '/man.svg',
+                                                audioSrc: '/es_man.mp3',
+                                            },
+                                            {
+                                                option: 'la mujer',
+                                                correct: false,
+                                                imageSrc: '/woman.svg',
+                                                audioSrc: '/es_woman.mp3',
+                                            },
+                                            {
+                                                option: 'el robot',
+                                                correct: false,
+                                                imageSrc: '/robot.svg',
+                                                audioSrc: '/es_robot.mp3',
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'SELECT',
+                                        order: 3,
+                                        question: 'Which one of these is "the robot"?',
+                                        options: [
+                                            {
+                                                option: 'el hombre',
+                                                correct: false,
+                                                imageSrc: '/man.svg',
+                                                audioSrc: '/es_man.mp3',
+                                            },
+                                            {
+                                                option: 'la mujer',
+                                                correct: false,
+                                                imageSrc: '/woman.svg',
+                                                audioSrc: '/es_woman.mp3',
+                                            },
+                                            {
+                                                option: 'el robot',
+                                                correct: true,
+                                                imageSrc: '/robot.svg',
+                                                audioSrc: '/es_robot.mp3',
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 2,
+                                title: 'Pronouns',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: 'l2 - Which one of these is "the man"?',
+                                        options: [
+                                            {
+                                                option: 'el hombre',
+                                                correct: true,
+                                                imageSrc: '/man.svg',
+                                                audioSrc: '/es_man.mp3',
+                                            },
+                                            {
+                                                option: 'la mujer',
+                                                correct: false,
+                                                imageSrc: '/woman.svg',
+                                                audioSrc: '/es_woman.mp3',
+                                            },
+                                            {
+                                                option: 'el robot',
+                                                correct: false,
+                                                imageSrc: '/robot.svg',
+                                                audioSrc: '/es_robot.mp3',
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 3,
+                                title: 'Verbs',
+                            },
+                            {
+                                order: 4,
+                                title: 'Adjectives',
+                            },
+                            {
+                                order: 5,
+                                title: 'Grammar',
+                            },
 
-                        {
-                            order: 6,
-                            title: 'Verbs',
-                        },
-                        {
-                            order: 7,
-                            title: 'Adjectives',
-                        },
-                        {
-                            order: 8,
-                            title: 'Grammar',
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            title: 'Italian',
-            altCode: 'it',
-        },
-        {
-            title: 'French',
-            altCode: 'fr',
-        },
-        {
-            title: 'German',
-            altCode: 'de',
-        },
-    ]
+                            {
+                                order: 6,
+                                title: 'Verbs',
+                            },
+                            {
+                                order: 7,
+                                title: 'Adjectives',
+                            },
+                            {
+                                order: 8,
+                                title: 'Grammar',
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: 'French',
+                altCode: 'fr',
+            },
+            {
+                title: 'German',
+                altCode: 'de',
+            },
+        ]
+    },
+    {
+        title: 'bcs',
+        courses: [
+            {
+                title: 'বাংলা ভাষা ও সাহিত্য',
+                altCode: 'bangla',
+                units:[
+                    {
+                        title: 'Unit 1',
+                        description: 'বাংলা ব্যাকরণ ও সাহিত্য।',
+                        order: 1,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: 'ব্যাকরণ',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: 'নিম্নলিখিত কোনটি একটি বাংলা সংযোজক শব্দ?',
+                                        options: [
+                                            { option: 'এবং', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'গিয়ে', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'আমি', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    },
+                                    {
+                                        type: 'SELECT',
+                                        order: 2,
+                                        question: 'বাংলা ভাষার প্রথম ব্যাকরণ রচয়িতা কে?',
+                                        options: [
+                                            { option: 'রাজা রামমোহন রায়', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'নাথানিয়েল ব্রাসি হ্যালহেড', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'ঈশ্বরচন্দ্র বিদ্যাসাগর', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 2,
+                                title: 'সাহিত্য',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: 'রবীন্দ্রনাথ ঠাকুরের কোন রচনা নোবেল পুরস্কার পেয়েছিল?',
+                                        options: [
+                                            { option: 'গীতাঞ্জলি', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'ঘরে বাইরে', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'রাজর্ষি', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 3,
+                                title: 'প্রবাদ ও বাগধারা',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: '"অন্ধকারে ঢিল মারা" বাক্যটির অর্থ কী?',
+                                        options: [
+                                            { option: 'অনিশ্চিত কিছু করা', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'কোনো কিছু নষ্ট করা', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'কারো সাহায্য করা', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Unit 2',
+                        description: 'বাংলা শব্দার্থ ও ব্যাকরণ।',
+                        order: 2,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: 'শব্দার্থ',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: '"সুবাস" শব্দের বিপরীত শব্দ কোনটি?',
+                                        options: [
+                                            { option: 'দুর্গন্ধ', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'সুন্দর', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'মিষ্টি', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Unit 3',
+                        description: 'বাংলা সাহিত্য ও উপন্যাস।',
+                        order: 3,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: 'উপন্যাস ও গল্প',
+                                challenges: [
+                                    {
+                                        type: 'SELECT',
+                                        order: 1,
+                                        question: '"পথের পাঁচালী" উপন্যাসের লেখক কে?',
+                                        options: [
+                                            { option: 'বিভূতিভূষণ বন্দ্যোপাধ্যায়', correct: true, imageSrc: null, audioSrc: null },
+                                            { option: 'সুকুমার রায়', correct: false, imageSrc: null, audioSrc: null },
+                                            { option: 'সত্যজিৎ রায়', correct: false, imageSrc: null, audioSrc: null }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: 'ইংরেজি ভাষা ও সাহিত্য',
+                altCode: 'english',
+                units: [
+                    {
+                        title: "Unit 1",
+                        description: "English Grammar and Literature.",
+                        order: 1,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: "Grammar",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 1,
+                                        question: "Which one is a correct English sentence?",
+                                        options: [
+                                            { option: "He go to school.", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "He goes to school.", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "Go he school.", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    },
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "Which sentence is in the past tense?",
+                                        options: [
+                                            { option: "He is running.", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "He ran yesterday.", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "He will run tomorrow.", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 2,
+                                title: "Vocabulary",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "Which word means 'happy'?",
+                                        options: [
+                                            { option: "Sad", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "Joyful", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "Angry", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: "Unit 2",
+                        description: "English Literature: Poetry and Drama.",
+                        order: 2,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: "Poetry",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 1,
+                                        question: "Who is the poet of 'The Road Not Taken'?",
+                                        options: [
+                                            { option: "William Shakespeare", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "Robert Frost", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "John Keats", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    },
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "What is the theme of 'The Raven'?",
+                                        options: [
+                                            { option: "Hope and love", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "Grief and loss", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "Adventure and mystery", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 2,
+                                title: "Drama",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 1,
+                                        question: "Who wrote 'Romeo and Juliet'?",
+                                        options: [
+                                            { option: "Christopher Marlowe", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "William Shakespeare", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "George Bernard Shaw", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    },
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "What is the genre of 'Macbeth'?",
+                                        options: [
+                                            { option: "Comedy", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "Tragedy", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "History", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        title: "Unit 3",
+                        description: "English Composition and Writing Skills.",
+                        order: 3,
+                        lesson: [
+                            {
+                                order: 1,
+                                title: "Essay Writing",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 1,
+                                        question: "Which one is a good essay introduction?",
+                                        options: [
+                                            { option: "The internet is really important.", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "The internet has revolutionized the way we communicate, work, and learn, offering both opportunities and challenges.", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "In conclusion, the internet is everywhere.", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    },
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "What is the main purpose of a thesis statement in an essay?",
+                                        options: [
+                                            { option: "To summarize the essay", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "To present the main argument or point of the essay", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "To introduce the conclusion", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                order: 2,
+                                title: "Creative Writing",
+                                challenges: [
+                                    {
+                                        type: "SELECT",
+                                        order: 1,
+                                        question: "Which one is an example of creative writing?",
+                                        options: [
+                                            { option: "A news article about the latest technology.", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "A short story about an adventure in space.", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "A research paper on climate change.", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    },
+                                    {
+                                        type: "SELECT",
+                                        order: 2,
+                                        question: "What is important when writing a short story?",
+                                        options: [
+                                            { option: "A clear plot, interesting characters, and a strong theme.", correct: true, imageSrc: "", audioSrc: "" },
+                                            { option: "Only having long paragraphs.", correct: false, imageSrc: "", audioSrc: "" },
+                                            { option: "Writing in a formal tone.", correct: false, imageSrc: "", audioSrc: "" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
 
-}];
+                ]
+            }
+
+        ]
+    }
+];
 
 
 export const seedData = async (req, res) => {
@@ -956,10 +1250,11 @@ export const seedData = async (req, res) => {
                 });
 
 
-                if(!course.units)continue;
+                if(!course.units) continue;
                 for(const unit of course.units) {
                     const _unit = await Unit.create({
                         title: unit.title,
+                        description: unit.description,
                         courseId: _course._id,
                         order: 1
                     });
@@ -989,8 +1284,8 @@ export const seedData = async (req, res) => {
                                     challengeId: _challenge._id,
                                     text: option.option,
                                     correct: option.correct,
-                                    imageSrc:option.imageSrc,
-                                    audioSrc:option.audioSrc
+                                    imageSrc: option.imageSrc,
+                                    audioSrc: option.audioSrc
                                 });
                             }
                         }

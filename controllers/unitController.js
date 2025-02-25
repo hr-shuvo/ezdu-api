@@ -73,6 +73,7 @@ export const loadUnits = async (req, res) => {
                     order: {$first: "$lessons.order"},
                     unitId: {$first: "$_id"},
                     unitTitle: {$first: "$title"},
+                    unitDescription: {$first: "$description"},
                     unitOrder: {$first: "$order"},
                     challenges: {$push: "$lessons.challenges"}
                 }
@@ -106,6 +107,7 @@ export const loadUnits = async (req, res) => {
                 $group: {
                     _id: "$unitId",
                     title: {$first: "$unitTitle"},
+                    description: {$first: "$unitDescription"},
                     order: {$first: "$unitOrder"},
                     lessons: {
                         $push: {
