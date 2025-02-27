@@ -58,7 +58,8 @@ export const logout = async (req, res) => {
     res.cookie('token', '', {
         path: '/',
         httpOnly: true,
-        expires: new Date(0),
+        // expires: new Date(0),
+        maxAge: 0,
         sameSite: 'none',
         secure: true,
         ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
