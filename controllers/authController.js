@@ -48,7 +48,7 @@ export const login = async (req, res) => {
         expires: new Date(Date.now() + 1000 * 86400), // 1 day
         sameSite: 'none',
         secure: true,
-        domain: '.ezduonline.com',
+        // ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
     })
 
     return res.status(StatusCodes.OK).json({msg: 'User logged in'});
@@ -61,7 +61,7 @@ export const logout = async (req, res) => {
         expires: new Date(0),
         sameSite: 'none',
         secure: true,
-        domain: '.ezduonline.com',
+        // ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
     });
 
     // res.clearCookie('token', 'logout', {
