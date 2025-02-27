@@ -60,7 +60,8 @@ export const logout = async (req, res) => {
         httpOnly: true,
         expires: new Date(0),
         sameSite: 'none',
-        secure: true
+        secure: true,
+        domain: '.ezduonline.com',
     });
 
     // res.clearCookie('token', 'logout', {
