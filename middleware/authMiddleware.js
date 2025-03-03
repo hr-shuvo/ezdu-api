@@ -8,7 +8,7 @@ export const authenticateUser = (req, res, next) => {
     if(!token) {
         throw new UnAuthenticateError('You need to login to access this route');
     }
-    console.log('token: ', token)
+    // console.log('token: ', token)
 
     try {
         const {userId, role} = verifyJWT(token);
@@ -48,7 +48,7 @@ export const authenticateUser = (req, res, next) => {
 
 export const authorizePermission = (...roles) => {
     return (req, res, next) => {
-        console.log('Authorizing permission... ', roles);
+        // console.log('Authorizing permission... ', roles);
 
         const {token} = req.cookies;
         if(!token) {

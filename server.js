@@ -10,6 +10,7 @@ import cors from 'cors';
 import { authenticateUser } from "./middleware/authMiddleware.js";
 import userRouter from "./routes/userRouter.js";
 import courseRoute from "./routes/courseRoute.js";
+import moduleRouter from "./routes/moduleRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
 import { seedData } from "./utils/seedData.js";
 import unitRouter from "./routes/unitRouter.js";
@@ -52,12 +53,6 @@ app.use(
 
 
 app.get('/', async (req, res) => {
-    // await ChallengeProgress.create({
-    //     userId: '67aa2b7ccefe6d9c8d01c971',
-    //     challengeId: '67aa2b7ccefe6d9c8d01c971',
-    //     completed: false
-    //
-    // })
 
     res.send('Hello World');
 });
@@ -74,6 +69,7 @@ app.get('/api/v1/seed', seedData);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/courses', authenticateUser, courseRoute);
+app.use('/api/v1/modules', moduleRouter);
 app.use('/api/v1/userProgress', authenticateUser, userProgressRoute);
 app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 app.use('/api/v1/userUnits', authenticateUser, unitRouter);
