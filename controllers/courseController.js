@@ -1,13 +1,32 @@
 
 import { Course } from '../models/CourseModel.js'
 import { StatusCodes } from "http-status-codes";
+import { _loadCourses } from '../services/courseService.js';
 
 export const loadCourses = async (req, res) =>{
 
-    try{
-        const data = await Course.find();
+    const {isActive, moduleId} = req.query;
 
-        res.status(200).json(data);
+    const query = {};
+
+    if(moduleId){
+        query.moduleId = moduleId;
+    }
+    if(isActive == true){
+        query.status = 1;
+    }
+    if(isActive == false){
+        query.status = 0;
+    }
+
+    const page = Number(req.query.pg) || 1;
+    const size = Number(req.query.sz) || 10;
+
+    try{
+        // const data = await Course.find();
+        const {data, totalCount, totalPage, currentPage} = await _loadCourses(query, page, size);
+
+        res.status(200).json({data, totalCount, totalPage, currentPage});
     }
     catch (error){
         res.status(500).json({ message: "Failed to fetch courses", error: error.message });
@@ -21,7 +40,18 @@ export const createCourse = async (req, res) =>{
 
     req.body.createdBy = req.user.userId;
 
-    const course = await Course.create(req.body);
+    const course = req.body;
+
+    if (course._id) {
+        await Course.findByIdAndUpdate(course._id, course);
+        res.status(200).json('update success');
+    }
+    else {
+        await Course.create(course)
+        res.status(200).json('create success');
+    }
+
+    // const course = await Course.create(req.body);
 
     res.status(StatusCodes.CREATED).json({course});
 };

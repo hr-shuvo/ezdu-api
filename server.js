@@ -69,7 +69,7 @@ app.get('/api/v1/seed', seedData);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/courses', authenticateUser, courseRoute);
-app.use('/api/v1/modules', moduleRouter);
+app.use('/api/v1/modules', authenticateUser, moduleRouter);
 app.use('/api/v1/userProgress', authenticateUser, userProgressRoute);
 app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 app.use('/api/v1/userUnits', authenticateUser, unitRouter);
