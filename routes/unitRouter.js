@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { loadUnits } from "../controllers/unitController.js";
+import { loadUserUnits } from "../controllers/unitController.js";
 
 
 const router = Router();
 
 
 
-router.get('/', loadUnits);
+// router.get('/', loadUserUnits);
+router.get('/userUnits', loadUserUnits);
 // router.post('/create', createUnit);
 
 
