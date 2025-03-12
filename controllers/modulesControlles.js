@@ -2,8 +2,6 @@ import { Module } from "../models/CourseModel.js";
 import { _loadModules } from "../services/moduleService.js";
 
 export const loadModules = async (req, res) => {
-
-
     const {isActive} = req.query;
 
     const query = {};

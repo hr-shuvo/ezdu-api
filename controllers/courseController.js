@@ -34,6 +34,29 @@ export const loadCourses = async (req, res) =>{
     }
 
 };
+
+
+export const getCourse = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+        if(!courseId){
+            return res.status(400).json({ message: "Invalid course id", error: error.message });
+        }
+
+        const course = await Course.findById(courseId);
+
+        if(!course){
+            return res.status(404).json({ message: "Failed to fetch course", error: error.message });
+        }
+
+        res.status(200).json(course);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch modues", error: error.message });
+    }
+}
+
+
+
 export const createCourse = async (req, res) =>{
 
     console.log(req.body)
