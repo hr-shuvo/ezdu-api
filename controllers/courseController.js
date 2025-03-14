@@ -51,7 +51,7 @@ export const getCourse = async (req, res) => {
 
         res.status(200).json(course);
     } catch (error) {
-        res.status(500).json({ message: "Failed to fetch modues", error: error.message });
+        res.status(500).json({ message: "Failed to fetch course", error: error.message });
     }
 }
 
