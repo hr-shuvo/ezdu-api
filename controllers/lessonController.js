@@ -1,10 +1,13 @@
 import { _loadLessons } from "../services/lessonService.js";
 
 export const loadLessons = async (req, res) => {
-    const {isActive} = req.query;
+    const {isActive, unitId} = req.query;
 
     const query = {};
 
+    if(unitId){
+        query.unitId = unitId;
+    }
     if(isActive == true){
         query.status = 1;
     }
