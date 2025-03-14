@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { loadUserUnits } from "../controllers/unitController.js";
+import { loadUserUnits, loadUnits } from "../controllers/unitController.js";
 
 
 const router = Router();
 
 
 
-// router.get('/', loadUserUnits);
-router.get('/userUnits', loadUserUnits);
+router.get('/', loadUnits);
 // router.post('/create', createUnit);
 
 
+router.get('/userUnits', loadUserUnits);
 
 export default router;

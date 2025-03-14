@@ -10,26 +10,27 @@ import mongoose from "mongoose";
 
 
 
+export const _loadUnits = async (query, page, size) => {
+    try {
 
+        const skip = (page-1) *  size;
 
+        const data = await Unit.find(query).skip(skip).limit(size);
 
+        const totalCount = await Unit.countDocuments(query);
+        const totalPage = Math.ceil(totalCount / size);
 
+        if (!data) {
+            throw new NotFoundError('units not found')
+        }
 
+        return {data, totalCount, totalPage, currentPage:page};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    } catch (error) {
+        throw new Error(error.message);
+        res.status(500).json({ message: "Failed to fetch units", error: error.message });
+    }
+}
 
 
 
