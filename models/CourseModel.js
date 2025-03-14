@@ -29,20 +29,20 @@ const unitSchema = new mongoose.Schema({
     description: { type: String, required: false },
     courseId: { type: mongoose.Schema.Types.ObjectId, ref: "Course", required: true },
     order: { type: Number, required: true, default: 1 },
-});
+}, { timestamps: true });
 
 const lessonSchema = new mongoose.Schema({
     title: { type: String, required: true },
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: "Unit", required: true },
     order: { type: Number, required: true },
-});
+}, { timestamps: true });
 
 const challengeSchema = new mongoose.Schema({
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson", required: true },
     type: { type: String, enum: challengeTypes, required: true },
     question: { type: String, required: true },
     order: { type: Number, required: true },
-});
+}, { timestamps: true });
 
 const challengeOptionSchema = new mongoose.Schema({
     challengeId: { type: mongoose.Schema.Types.ObjectId, ref: "Challenge", required: true },
