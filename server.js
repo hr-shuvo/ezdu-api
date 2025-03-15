@@ -13,6 +13,7 @@ import courseRoute from "./routes/courseRoute.js";
 import moduleRouter from "./routes/moduleRoute.js";
 import unitRouter from "./routes/unitRouter.js";
 import lessonRouter from "./routes/lessonRoute.js";
+import challengeRouter from "./routes/challengeRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
 import { seedData } from "./utils/seedData.js";
 import { ChallengeProgress } from "./models/CourseModel.js";
@@ -73,6 +74,7 @@ app.use('/api/v1/modules', authenticateUser, moduleRouter);
 app.use('/api/v1/courses', authenticateUser, courseRoute);
 app.use('/api/v1/units', authenticateUser, unitRouter);
 app.use('/api/v1/lessons', authenticateUser, lessonRouter);
+app.use('/api/v1/challenges', authenticateUser, challengeRouter);
 app.use('/api/v1/userProgress', authenticateUser, userProgressRoute);
 app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 

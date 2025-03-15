@@ -18,6 +18,6 @@ export const _loadLessons = async (query, page, size) => {
         return {data, totalCount, totalPage, currentPage:page};
 
     } catch (error) {
-        res.status(500).json({ message: "Failed to fetch modules", error: error.message });
+        res.status(500).json({ message: "Failed to fetch lessons", error: error.message });
     }
 }
