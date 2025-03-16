@@ -42,6 +42,14 @@ const challengeSchema = new mongoose.Schema({
     type: { type: String, enum: challengeTypes, required: true },
     question: { type: String, required: true },
     order: { type: Number, required: true },
+    optionList: [
+        {
+            text: { type: String, required: true },
+            correct: { type: Boolean, required: true },
+            imageSrc: { type: String },
+            audioSrc: { type: String }
+        }
+    ]
 }, { timestamps: true });
 
 const challengeOptionSchema = new mongoose.Schema({
