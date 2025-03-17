@@ -49,3 +49,24 @@ export const getChallenge = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
     }
 }
+
+export const createChallenge = async (req, res) => {
+    try {
+        // const data = await _loadModules();
+
+        const challenge = req.body;
+
+        if (challenge._id) {
+            await Challenge.findByIdAndUpdate(challenge._id, challenge);
+            res.status(200).json('update success');
+        }
+        else {
+            await Challenge.create(challenge)
+            res.status(200).json('create success');
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+    }
+}
