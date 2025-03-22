@@ -8,13 +8,13 @@ export const _getUserProgress = async (userId) => {
         .populate('activeCourseId')
         .lean();
 
+    if(!data) {
+        throw new NotFoundError('user progress not found')
+    }
+
     if(data.activeCourseId) {
         data.activeCourse = {...data.activeCourseId};
         data.activeCourseId = data.activeCourse._id;
-    }
-
-    if(!data) {
-        throw new NotFoundError('user progress not found')
     }
 
     return data;
