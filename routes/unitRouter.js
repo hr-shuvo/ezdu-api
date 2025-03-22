@@ -2,7 +2,8 @@ import { Router } from "express";
 import {
     loadUserUnits,
     loadUnits,
-    getUnit
+    getUnit,
+    createUnit
 } from "../controllers/unitController.js";
 
 
@@ -14,9 +15,7 @@ router.get('/', loadUnits);
 router.get('/userUnits', loadUserUnits);
 
 router.get('/:id', getUnit); // can't put above / should be after userUnits
-
-
-// router.post('/create', createUnit);
+router.post('/create', createUnit);
 
 
 export default router;

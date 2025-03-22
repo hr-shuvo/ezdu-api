@@ -1,4 +1,4 @@
-import { Unit } from "../models/CourseModel.js";
+import {Module, Unit} from "../models/CourseModel.js";
 import { _loadUserUnits, _loadUnits } from "../services/unitService.js";
 import { _getUserProgress } from "../services/userProgress.js";
 
@@ -10,10 +10,10 @@ export const loadUnits = async (req, res) => {
 
     const query = {};
 
-    if (isActive == true) {
+    if (isActive === true) {
         query.status = 1;
     }
-    if (isActive == false) {
+    if (isActive === false) {
         query.status = 0;
     }
 
@@ -53,7 +53,26 @@ export const getUnit = async (req, res) => {
 }
 
 
+export const createUnit = async (req, res) => {
+    try {
+        // const data = await _loadUnits();
 
+        const unit = req.body;
+
+        if (unit._id) {
+            await Unit.findByIdAndUpdate(unit._id, unit);
+            res.status(200).json('update success');
+        }
+        else {
+            await Unit.create(unit)
+            res.status(200).json('create success');
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch unit", error: error.message });
+    }
+}
 
 
 
