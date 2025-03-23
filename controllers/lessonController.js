@@ -1,4 +1,4 @@
-import { Lesson } from "../models/CourseModel.js";
+import {Lesson, Module} from "../models/CourseModel.js";
 import { _loadLessons } from "../services/lessonService.js";
 
 export const loadLessons = async (req, res) => {
@@ -44,6 +44,27 @@ export const getLesson = async (req, res) => {
         }
 
         res.status(200).json(lesson);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch lesson", error: error.message });
+    }
+}
+
+export const createLesson = async (req, res) => {
+    try {
+        // const data = await _loadLessons();
+
+        const lesson = req.body;
+
+        if (lesson._id) {
+            await Lesson.findByIdAndUpdate(lesson._id, lesson);
+            res.status(200).json('update success');
+        }
+        else {
+            await Lesson.create(lesson)
+            res.status(200).json('create success');
+        }
+
+
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch lesson", error: error.message });
     }
