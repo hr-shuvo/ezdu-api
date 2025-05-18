@@ -6,7 +6,8 @@ export const _loadLessons = async (query, page, size) => {
 
         const skip = (page-1) *  size;
 
-        const data = await Lesson.find(query).skip(skip).limit(size);
+        const data = await Lesson.find(query).skip(skip).limit(size)
+            .sort({order: 1});
 
         const totalCount = await Lesson.countDocuments(query);
         const totalPage = Math.ceil(totalCount / size);
