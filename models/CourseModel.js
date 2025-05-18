@@ -11,6 +11,7 @@ const moduleSchema = new mongoose.Schema({
 
 const courseSchema = new mongoose.Schema({
     title: { type: String, required: true },
+    subTitle: { type: String, required: false },
     imageSrc: { type: String, required: true, default: '/globe.svg' },
     moduleId: { type: mongoose.Schema.Types.ObjectId, ref: "Module" }
 }, { timestamps: true });

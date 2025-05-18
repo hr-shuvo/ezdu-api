@@ -64,7 +64,7 @@ export const _loadUserUnits = async (userId) => {
                     as: "lessons"
                 }
             },
-            {$unwind: {path: "$lessons", preserveNullAndEmptyArrays: true}},
+            {$unwind: {path: "$lessons", preserveNullAndEmptyArrays: false}},
             {
                 $lookup: {
                     from: "challenges",
@@ -74,15 +74,6 @@ export const _loadUserUnits = async (userId) => {
                 }
             },
             {$unwind: {path: "$lessons.challenges", preserveNullAndEmptyArrays: true}},
-
-            // {
-            //     $lookup: {
-            //         from: "challengeoptions",
-            //         localField: "lessons.challenges._id",
-            //         foreignField: "challengeId",
-            //         as: "lessons.challenges.options"
-            //     }
-            // },
 
             {
                 $lookup: {
@@ -161,7 +152,7 @@ export const _loadUserUnits = async (userId) => {
                 }
             },
 
-            {$sort: {_id: 1}}
+            {$sort: {order: 1}}
         ]);
 
 

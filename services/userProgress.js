@@ -35,7 +35,7 @@ export const _getCourseProgress = async (userId) => {
         userProgress.activeCourseId = userProgress.activeCourse._id;
     }
 
-    const unitsInActiveCourse = await Unit.aggregate([
+    let  unitsInActiveCourse = await Unit.aggregate([
         {
             $match: {courseId: new mongoose.Types.ObjectId(userProgress.activeCourseId)}
         },
@@ -84,8 +84,94 @@ export const _getCourseProgress = async (userId) => {
                 lessons: {$push: "$$ROOT"}
             }
         },
-        {$sort: {_id: 1}}
+        {$sort: {order: 1}}
     ]);
+
+    unitsInActiveCourse = await Unit.aggregate([
+        {
+            $match: {
+                courseId: new mongoose.Types.ObjectId(userProgress.activeCourseId)
+            }
+        },
+        {
+            $lookup: {
+                from: "lessons",
+                localField: "_id",
+                foreignField: "unitId",
+                as: "lessons"
+            }
+        },
+        { $unwind: { path: "$lessons", preserveNullAndEmptyArrays: true } },
+        { $sort: { "lessons.order": 1 } },
+
+        {
+            $lookup: {
+                from: "challenges",
+                localField: "lessons._id",
+                foreignField: "lessonId",
+                as: "lessons.challenges"
+            }
+        },
+        { $unwind: { path: "$lessons.challenges", preserveNullAndEmptyArrays: true } },
+        {
+            $lookup: {
+                from: "challengeprogresses",
+                let: { challengeId: "$lessons.challenges._id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ["$challengeId", "$$challengeId"] }
+                        }
+                    },
+                    {
+                        $match: {
+                            userId: new mongoose.Types.ObjectId(userId)
+                        }
+                    }
+                ],
+                as: "lessons.challenges.progress"
+            }
+        },
+
+        // Group back challenges under each lesson
+        {
+            $group: {
+                _id: "$lessons._id",
+                lessonId: { $first: "$lessons._id" },
+                lessonTitle: { $first: "$lessons.title" },
+                lessonOrder: { $first: "$lessons.order" },
+                unitId: { $first: "$_id" },
+                unitTitle: { $first: "$title" },
+                unitDescription: { $first: "$description" },
+                unitOrder: { $first: "$order" },
+                challenges: { $push: "$lessons.challenges" }
+            }
+        },
+        { $sort: { lessonOrder: 1 } },
+
+        // Group lessons under units
+        {
+            $group: {
+                _id: "$unitId",
+                title: { $first: "$unitTitle" },
+                description: { $first: "$unitDescription" },
+                order: { $first: "$unitOrder" },
+                lessons: {
+                    $push: {
+                        _id: "$lessonId",
+                        title: "$lessonTitle",
+                        order: "$lessonOrder",
+                        challenges: "$challenges"
+                    }
+                }
+            }
+        },
+        { $sort: { order: 1 } }
+    ]);
+
+
+
+    // return unitsInActiveCourse;
 
     const firstUncompletedLesson = unitsInActiveCourse
         .flatMap(unit => unit.lessons)
