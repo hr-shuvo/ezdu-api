@@ -1,4 +1,4 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import {
     getCourseProgress,
     getLesson, getLessonPercentage,
@@ -9,13 +9,13 @@ import {
 
 const router = Router()
 
-router.get('/',  getUserProgress)
-router.get('/courseProgress',  getCourseProgress)
-router.get('/getLesson',  getLesson)
-router.get('/getLessonPercentage',  getLessonPercentage)
+router.get('/', getUserProgress)
+router.get('/courseProgress', getCourseProgress)
+router.get('/getLesson', getLesson)
+router.get('/getLessonPercentage', getLessonPercentage)
 
 
-router.post('/selectUserCourse',  selectUserCourse)
+router.post('/selectUserCourse', selectUserCourse)
 
 
 export default router;

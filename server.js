@@ -16,8 +16,7 @@ import lessonRouter from "./routes/lessonRoute.js";
 import challengeRouter from "./routes/challengeRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
 import { seedData } from "./utils/seedData.js";
-import { ChallengeProgress } from "./models/CourseModel.js";
-import { upsertChallengeProgress } from "./controllers/challengeProgressController.js";
+import academyRouter from "./routes/academyRouter.js";
 import challengeProgressRouter from "./routes/challengeProgressRouter.js";
 
 
@@ -25,7 +24,7 @@ dotenv.config();
 const app = express();
 
 
-if(process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
@@ -78,6 +77,7 @@ app.use('/api/v1/challenges', authenticateUser, challengeRouter);
 app.use('/api/v1/userProgress', authenticateUser, userProgressRoute);
 app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 
+app.use('/api/v1/academy', academyRouter);
 
 
 app.use('*', (req, res) => {
@@ -94,7 +94,7 @@ try {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
-} catch(e) {
+} catch (e) {
     console.error(e);
     process.exit(1);
 }
