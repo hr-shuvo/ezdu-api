@@ -1,4 +1,5 @@
 import { Course } from "../models/CourseModel.js";
+import { NotFoundError } from "../errors/customError.js";
 
 
 export const _loadCourses = async (query, page, size) => {
@@ -19,6 +20,6 @@ export const _loadCourses = async (query, page, size) => {
 
     } catch (error) {
         throw new Error(error.message);
-        res.status(500).json({ message: "Failed to fetch Courses", error: error.message });
+        // res.status(500).json({ message: "Failed to fetch Courses", error: error.message });
     }
 }

@@ -1,11 +1,15 @@
 import { Router } from "express";
-import { loadAcademicSubject } from "../../controllers/acadymy/academyClassController.js";
+import {
+    getAcademicClass,
+    loadAcademicClass,
+    upsertAcademicClass
+} from "../../controllers/acadymy/academyClassController.js";
 
 const router = Router();
 
-// router.get('/', loadAcademicSubjects);
-
-router.get('/', loadAcademicSubject)
+router.get('/', loadAcademicClass);
+router.get('/:id', getAcademicClass)
+router.post('/upsert', upsertAcademicClass)
 
 
 

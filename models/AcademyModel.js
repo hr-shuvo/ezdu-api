@@ -1,17 +1,18 @@
 import mongoose from "mongoose";
 
 const academyVersionTypes = ["BN", "EN"];
+const academyLevelTypes = ["PRIMARY", "SECONDARY", "HIGHER_SECONDARY"];
 
-const AcademyLevelSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-
-})
+// const AcademyLevelSchema = new mongoose.Schema({
+//     title: { type: String, required: true },
+//
+// })
 
 
 const AcademyClassSchema = new mongoose.Schema({
     title: {type: String, required: true},
     version: {type: String, enum:academyVersionTypes, required: true, default: academyVersionTypes[0]},
-    levelId: {type: mongoose.Schema.Types.ObjectId, ref: "AcademyLevel"},
+    level: {type:String,  enum: academyLevelTypes, ref: "AcademyLevel"},
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
@@ -47,14 +48,14 @@ const AcademyLessonContentSchema = new mongoose.Schema({
 
 
 
-const AcademyLevel = mongoose.model("AcademyLevel", AcademyLevelSchema);
+// const AcademyLevel = mongoose.model("AcademyLevel", AcademyLevelSchema);
 const AcademyClass = mongoose.model("AcademyClass", AcademyClassSchema);
 const AcademySubject = mongoose.model("AcademySubject", AcademySubjectSchema);
 const AcademyLesson = mongoose.model("AcademyLesson", AcademyLessonSchema);
 const LessonContent = mongoose.model('LessonContent', AcademyLessonContentSchema);
 
 export {
-    AcademyLevel,
+    // AcademyLevel,
     AcademyClass,
     AcademySubject,
     AcademyLesson,
