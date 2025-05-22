@@ -19,8 +19,8 @@ const AcademySubjectSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subTitle: { type: String},
     hasSubjectPaper: {type: Boolean, default: false},
-    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject"},
-    classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass"},
+    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
+    classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
 
 });
 
