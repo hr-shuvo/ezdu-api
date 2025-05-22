@@ -13,8 +13,8 @@ export const _loadAcademicSubject = async (query, page, size, isTree) => {
         if (!result) {
             throw new NotFoundError('Academic Subject not found')
         }
-        console.log('result: ', result);
-        console.log('query: ', query);
+        // console.log('result: ', result);
+        // console.log('query: ', query);
 
         if (!isTree) {
             return {data:result, totalCount, totalPage, currentPage: page};

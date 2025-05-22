@@ -29,9 +29,9 @@ const AcademyLessonSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subTitle: { type: String },
     description: { type: String },
+    order: { type: Number },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject"},
-    topicId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson"},
-
+    lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson"},
 })
 const AcademyLessonContentSchema = new mongoose.Schema({
     title: { type: String, required: true },
