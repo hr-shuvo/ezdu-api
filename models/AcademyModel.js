@@ -36,6 +36,7 @@ const AcademyLessonSchema = new mongoose.Schema({
 const AcademyLessonContentSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subTitle: { type: String },
+    content: { type: String },
     description: { type: String },
     text1: { type: String },
     text2: { type: String },
