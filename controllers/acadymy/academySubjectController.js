@@ -11,6 +11,10 @@ export const loadAcademicSubject = async (req, res) => {
 
     const query = {};
 
+    if(req.query.classId){
+        query.classId = req.query.classId;
+    }
+
     try {
         // const data = await Course.find();
         const {data, totalCount, totalPage, currentPage} = await _loadAcademicSubject(query, page, size, isTree);

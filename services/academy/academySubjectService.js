@@ -1,11 +1,26 @@
-import { AcademySubject } from "../../models/AcademyModel.js";
+import { AcademyClass, AcademySubject } from "../../models/AcademyModel.js";
 import { NotFoundError } from "../../errors/customError.js";
 
 export const _loadAcademicSubject = async (query, page, size, isTree) => {
     try {
         const skip = (page - 1) * size;
 
-        const result = await AcademySubject.find(query).skip(skip).limit(size).lean();
+        const response = await AcademySubject.find(query).skip(skip).limit(size).lean().populate({
+            path: 'classId',
+            model: AcademyClass,
+        });
+
+        const result = response.map(subject =>{
+            const {classId, ...rest} = subject;
+
+            return {
+                ...rest,
+                academyClass: classId,
+                classId: classId._id
+            }
+        });
+
+
 
         const totalCount = await AcademySubject.countDocuments(query);
         const totalPage = Math.ceil(totalCount / size);
