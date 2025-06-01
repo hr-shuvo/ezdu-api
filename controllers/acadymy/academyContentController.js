@@ -4,15 +4,15 @@ import { _loadAcademicLessonContent } from "../../services/academy/academicConte
 
 export const loadAcademicLessonContent= async (req, res) => {
 
-    const {isTree, subjectId} = req.query;
+    const {isTree, lessonId} = req.query;
 
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;
 
     const query = {};
 
-    if(subjectId) {
-        query.subjectId = subjectId;
+    if(lessonId) {
+        query.lessonId = lessonId;
     }
 
     try {
