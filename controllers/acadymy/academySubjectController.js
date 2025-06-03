@@ -4,24 +4,32 @@ import { AcademySubject } from "../../models/AcademyModel.js";
 
 export const loadAcademicSubject = async (req, res) => {
 
-    const {isTree} = req.query;
+    const { isTree, classId, classIds } = req.query;
 
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;
 
     const query = {};
 
-    if(req.query.classId){
+    if (classId) {
+        query.classId = classId;
+    }
+
+    if (Array.isArray(classIds) && classIds.length > 0) {
+        query.classId = { $in: classIds };
+    }
+
+    if (req.query.classId) {
         query.classId = req.query.classId;
     }
 
     try {
         // const data = await Course.find();
-        const {data, totalCount, totalPage, currentPage} = await _loadAcademicSubject(query, page, size, isTree);
+        const { data, totalCount, totalPage, currentPage } = await _loadAcademicSubject(query, page, size, isTree);
 
-        res.status(200).json({data, totalCount, totalPage, currentPage});
+        res.status(200).json({ data, totalCount, totalPage, currentPage });
     } catch (error) {
-        res.status(500).json({message: "Failed to fetch courses", error: error.message});
+        res.status(500).json({ message: "Failed to fetch courses", error: error.message });
     }
 }
 
@@ -30,18 +38,18 @@ export const getAcademicSubject = async (req, res) => {
     try {
         const subjectId = req.params.id;
         if (!subjectId) {
-            return res.status(400).json({message: "Invalid course id"});
+            return res.status(400).json({ message: "Invalid course id" });
         }
 
         const result = await AcademySubject.findById(subjectId);
 
         if (!result) {
-            return res.status(404).json({message: "Failed to fetch class"});
+            return res.status(404).json({ message: "Failed to fetch class" });
         }
 
         res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({message: "Failed to fetch class", error: error.message});
+        res.status(500).json({ message: "Failed to fetch class", error: error.message });
     }
 }
 
