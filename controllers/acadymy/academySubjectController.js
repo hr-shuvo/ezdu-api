@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { _loadAcademicSubject } from "../../services/academy/academySubjectService.js";
-import { AcademySubject } from "../../models/AcademyModel.js";
+import { AcademyClass, AcademySubject } from "../../models/AcademyModel.js";
 
 export const loadAcademicSubject = async (req, res) => {
 
@@ -41,11 +41,24 @@ export const getAcademicSubject = async (req, res) => {
             return res.status(400).json({ message: "Invalid course id" });
         }
 
-        const result = await AcademySubject.findById(subjectId);
+        const response = await AcademySubject.findById(subjectId).lean().populate({
+            path: 'classId',
+            model: AcademyClass,
+        });
 
-        if (!result) {
+        console.log(response)
+
+        if (!response) {
             return res.status(404).json({ message: "Failed to fetch class" });
         }
+
+        const { classId, ...rest } = response;
+
+        const result = {
+            ...rest,
+            academyClass: classId,
+            classId: classId?._id,
+        };
 
         res.status(200).json(result);
     } catch (error) {

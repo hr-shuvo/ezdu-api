@@ -20,8 +20,6 @@ export const _loadAcademicSubject = async (query, page, size, isTree) => {
             }
         });
 
-
-
         const totalCount = await AcademySubject.countDocuments(query);
         const totalPage = Math.ceil(totalCount / size);
 
