@@ -14,9 +14,9 @@ export const _loadAcademicLesson = async (query, page, size, isTree) => {
             throw new NotFoundError('Academic lesson not found')
         }
         // console.log('result: ', result);
-        // console.log('query: ', query);
+        // console.log('query: ', isTree);        
 
-        if (!isTree) {
+        if (!isTree || isTree === 'false') {
             return {data:result, totalCount, totalPage, currentPage: page};
         }
 
