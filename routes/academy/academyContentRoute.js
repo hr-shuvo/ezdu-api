@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
     getAcademicLessonContent,
     loadAcademicLessonContent, upsertAcademicLessonContent
-} from "../../controllers/acadymy/academyContentController.js";
+} from "../../controllers/academy/academyContentController.js";
 
 const router = Router();
 

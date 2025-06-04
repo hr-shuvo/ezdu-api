@@ -3,7 +3,7 @@ import {
     getAcademicLesson,
     loadAcademicLesson,
     upsertAcademicLesson
-} from "../../controllers/acadymy/academyLessonController.js";
+} from "../../controllers/academy/academyLessonController.js";
 
 const router = Router();
 
