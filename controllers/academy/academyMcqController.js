@@ -14,6 +14,9 @@ export const loadAcademyMcq = async (req, res) => {
         query.subjectId = subjectId;
     }
 
+    // console.log(subjectId);
+    // console.log(lessonId);
+
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;
 
@@ -27,8 +30,46 @@ export const loadAcademyMcq = async (req, res) => {
 }
 
 
+export const getAcademyMcq = async (req, res) => {
+    try {
+        const mcqId = req.params.id;
+        if(!mcqId){
+            return res.status(400).json({ message: "Invalid mcq id", error: error.message });
+        }
+
+        const mcq = await AcademyMcq.findById(mcqId);
+
+        if(!mcq){
+            return res.status(404).json({ message: "Failed to fetch mcq", error: error.message });
+        }
+
+        res.status(200).json(mcq);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+    }
+}
 
 
+export const upsertAcademyMcq = async (req, res) => {
+    try {
+        // const data = await _loadModules();
+
+        const mcq = req.body;
+
+        if (mcq._id) {
+            await AcademyMcq.findByIdAndUpdate(mcq._id, mcq);
+            res.status(200).json('update success');
+        }
+        else {
+            await AcademyMcq.create(mcq)
+            res.status(200).json('create success');
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+    }
+}
 
 
 

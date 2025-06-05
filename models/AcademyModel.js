@@ -57,7 +57,7 @@ const AcademyMcqSchema = new mongoose.Schema({
         }
     ],
     description: { type: String, required: false },
-    userId: { type: String }
+    createdBy: { type: String }
 })
 
 

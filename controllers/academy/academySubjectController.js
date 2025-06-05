@@ -3,7 +3,6 @@ import { _loadAcademicSubject } from "../../services/academy/academySubjectServi
 import { AcademyClass, AcademySubject } from "../../models/AcademyModel.js";
 
 export const loadAcademicSubject = async (req, res) => {
-
     const { isTree, classId, classIds } = req.query;
 
     const page = Number(req.query.pg) || 1;
@@ -46,7 +45,7 @@ export const getAcademicSubject = async (req, res) => {
             model: AcademyClass,
         });
 
-        console.log(response)
+        // console.log(response)
 
         if (!response) {
             return res.status(404).json({ message: "Failed to fetch class" });
