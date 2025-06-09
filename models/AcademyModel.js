@@ -70,7 +70,7 @@ const AcademyQuizSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
     lessonIds: {type: []},
     questions: {type: []}
-})
+}, {timestamps: true})
 
 
 
