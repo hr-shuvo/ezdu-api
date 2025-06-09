@@ -33,6 +33,7 @@ const AcademyLessonSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson" },
 })
+
 const AcademyLessonContentSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subTitle: { type: String },
@@ -60,6 +61,17 @@ const AcademyMcqSchema = new mongoose.Schema({
     createdBy: { type: String }
 })
 
+const AcademyQuizSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    duration: {type: Number, required:true},
+    start: {type: Date},
+    end: {type: Date},
+    
+    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
+    lessonIds: {type: []},
+    questions: {type: []}
+})
+
 
 
 
@@ -69,6 +81,7 @@ const AcademySubject = mongoose.model("AcademySubject", AcademySubjectSchema);
 const AcademyLesson = mongoose.model("AcademyLesson", AcademyLessonSchema);
 const LessonContent = mongoose.model('LessonContent', AcademyLessonContentSchema);
 const AcademyMcq = mongoose.model('AcademyMcq', AcademyMcqSchema);
+const AcademyQuiz = mongoose.model('AcademyQuiz', AcademyQuizSchema);
 
 export {
     // AcademyLevel,
@@ -76,5 +89,6 @@ export {
     AcademySubject,
     AcademyLesson,
     LessonContent,
-    AcademyMcq
+    AcademyMcq,
+    AcademyQuiz
 }
