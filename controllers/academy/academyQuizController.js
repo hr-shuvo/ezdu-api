@@ -48,7 +48,7 @@ export const getAcademyOngoingQuiz = async (req, res) => {
         });
 
         if (!ongoingQuiz) {
-            return res.status(404).json({ message: "No active quiz in progress" });
+            return res.status(200).json({data:null, message: "No active quiz in progress" });
         }
 
         return res.status(200).json({ data: ongoingQuiz });
