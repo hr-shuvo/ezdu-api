@@ -85,7 +85,7 @@ export const upsertQuiz = async (req, res) => {
                 { new: true }
             );
 
-            return res.status(200).json({ message: "Quiz updated", quiz: updated });
+            return res.status(200).json({ message: "Quiz updated", data: updated });
         }
 
         const now = new Date();
@@ -167,7 +167,7 @@ export const loadOrCreateQuiz = async (req, res) => {
             questions
         });
 
-        return res.status(201).json({ quiz: newQuiz });
+        return res.status(201).json({ data: newQuiz });
 
     } catch (error) {
         console.error("Error in loadOrCreateQuiz:", error);
