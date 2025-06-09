@@ -50,6 +50,7 @@ const AcademyLessonContentSchema = new mongoose.Schema({
 const AcademyMcqSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson", required: true },
+    passage: { type: String },
     question: { type: String, required: true },
     optionList: [
         {

@@ -107,3 +107,67 @@ export const upsertQuiz = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
     }
 }
+
+export const loadOrCreateQuiz = async (req, res) => {
+    
+    try {
+        const userId = req.user?.userId;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const { lessonIds, subjectId, duration } = req.body;
+
+        if (!lessonIds || !Array.isArray(lessonIds) || !duration) {
+            return res.status(400).json({ message: "Missing lessonIds or duration" });
+        }
+
+        const now = new Date();
+
+        // 1. Check if there's an ongoing quiz
+        const ongoingQuiz = await AcademyQuiz.findOne({
+            userId,
+            start: { $lte: now },
+            end: { $gte: now }
+        });
+
+        if (ongoingQuiz) {
+            return res.status(200).json({ quiz: ongoingQuiz });
+        }
+
+        // 2. No ongoing quiz: Fetch MCQs
+        const mcqs = await AcademyMCQ.aggregate([
+            { $match: { lessonId: { $in: lessonIds.map(id => new mongoose.Types.ObjectId(id)) } } },
+            { $sample: { size: duration } }
+        ]);
+
+        // 3. Simplify questions & add selectedOption
+        const questions = mcqs.map(mcq => ({
+            lessonId: mcq.lessonId,
+            question: mcq.question,
+            passage: mcq.passage || null,
+            optionList: mcq.optionList,
+            selectedOption: null, // To track user's answer
+        }));
+
+        // 4. Create a new quiz
+        const end = new Date(now.getTime() + duration * 60 * 1000);
+
+        const newQuiz = await AcademyQuiz.create({
+            userId,
+            duration,
+            start: now,
+            end,
+            subjectId,
+            lessonIds,
+            questions
+        });
+
+        return res.status(201).json({ quiz: newQuiz });
+
+    } catch (error) {
+        console.error("Error in loadOrCreateQuiz:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+
+}
