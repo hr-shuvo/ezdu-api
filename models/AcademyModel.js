@@ -54,6 +54,7 @@ const AcademyMcqSchema = new mongoose.Schema({
     question: { type: String, required: true },
     optionList: [
         {
+            _id: false,
             text: { type: String, required: true },
             correct: { type: Boolean, required: true }
         }

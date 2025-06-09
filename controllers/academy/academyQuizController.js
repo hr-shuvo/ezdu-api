@@ -1,4 +1,5 @@
-import { AcademyQuiz } from "../../models/AcademyModel.js";
+import mongoose from "mongoose";
+import { AcademyQuiz, AcademyMcq } from "../../models/AcademyModel.js";
 
 
 
@@ -50,7 +51,7 @@ export const getAcademyOngoingQuiz = async (req, res) => {
             return res.status(404).json({ message: "No active quiz in progress" });
         }
 
-        return res.status(200).json({ quiz: ongoingQuiz });
+        return res.status(200).json({ data: ongoingQuiz });
 
     } catch (error) {
         console.error("Error getting ongoing quiz:", error);
@@ -109,7 +110,7 @@ export const upsertQuiz = async (req, res) => {
 }
 
 export const loadOrCreateQuiz = async (req, res) => {
-    
+
     try {
         const userId = req.user?.userId;
         if (!userId) {
@@ -136,7 +137,7 @@ export const loadOrCreateQuiz = async (req, res) => {
         }
 
         // 2. No ongoing quiz: Fetch MCQs
-        const mcqs = await AcademyMCQ.aggregate([
+        const mcqs = await AcademyMcq.aggregate([
             { $match: { lessonId: { $in: lessonIds.map(id => new mongoose.Types.ObjectId(id)) } } },
             { $sample: { size: duration } }
         ]);
@@ -146,7 +147,10 @@ export const loadOrCreateQuiz = async (req, res) => {
             lessonId: mcq.lessonId,
             question: mcq.question,
             passage: mcq.passage || null,
-            optionList: mcq.optionList,
+            optionList: mcq.optionList.map(opt => ({
+                text: opt.text,
+                correct: opt.correct
+            })),
             selectedOption: null, // To track user's answer
         }));
 
