@@ -17,7 +17,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
         customError.statusCode = StatusCodes.BAD_REQUEST;
     }
 
-    return res.status(customError.statusCode).json({msg: customError.message});
+    return res.status(customError.statusCode).json({message: customError.message});
 };
 
 export default errorHandlerMiddleware;

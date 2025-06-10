@@ -11,7 +11,7 @@ const withValidationErrors = (validateValues) => {
         (req, res, next) => {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                const errorMessages = errors.array().map((error) => error.msg);
+                const errorMessages = errors.array().map((error) => error.message);
 
                 if(errorMessages[0].startsWith('not authorized')) {
                     throw new UnAuthorizedError('not authorized to perform this action');

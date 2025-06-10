@@ -3,7 +3,6 @@ import { verifyJWT } from "../utils/tokenUtils.js";
 
 export const authenticateUser = (req, res, next) => {
 
-
     const {token} = req.cookies;
     if(!token) {
         throw new UnAuthenticateError('You need to login to access this route');
@@ -20,6 +19,26 @@ export const authenticateUser = (req, res, next) => {
     } catch(e) {
         console.error('Unauthorized');
         throw new UnAuthenticateError('You need to login to access this route');
+    }
+}
+
+
+export const optionalAuth = (req, res, next) => {
+
+    const {token} = req.cookies;
+    if(!token) {
+        return next();
+    }
+
+    try {
+        const {userId, role} = verifyJWT(token);
+
+        req.user = {userId, role};
+
+        next();
+    } catch(e) {
+        console.error('Unauthorized');
+        throw new UnAuthenticateError('Invalid user, continue as a guest');
     }
 }
 

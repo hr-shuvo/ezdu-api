@@ -14,9 +14,9 @@ export const register = async (req, res) => {
 
         await User.create(req.body);
 
-        return res.status(StatusCodes.CREATED).json({msg: 'Registration complete'});
+        return res.status(StatusCodes.CREATED).json({message: 'Registration complete'});
     } catch(error) {
-        return res.status(500).json({msg: error.message});
+        return res.status(500).json({message: error.message});
     }
 };
 
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
         ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
     })
 
-    return res.status(StatusCodes.OK).json({msg: 'User logged in'});
+    return res.status(StatusCodes.OK).json({message: 'User logged in'});
 };
 
 export const logout = async (req, res) => {
@@ -74,5 +74,5 @@ export const logout = async (req, res) => {
     //     sameSite: 'None',
     // });
 
-    return res.status(StatusCodes.OK).json({msg: 'User logged out'});
+    return res.status(StatusCodes.OK).json({message: 'User logged out'});
 }

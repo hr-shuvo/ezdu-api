@@ -14,10 +14,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    lastName: {
-        type: String,
-        default: 'lastName'
-    },
+    // lastName: {
+    //     type: String,
+    //     default: 'lastName'
+    // },
     location: {
         type: String,
         default: 'location'
