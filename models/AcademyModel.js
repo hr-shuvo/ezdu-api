@@ -21,8 +21,7 @@ const AcademySubjectSchema = new mongoose.Schema({
     hasSubjectPaper: { type: Boolean, default: false },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
     classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
-
-});
+}, { timestamps: true });
 
 
 const AcademyLessonSchema = new mongoose.Schema({
@@ -60,19 +59,32 @@ const AcademyMcqSchema = new mongoose.Schema({
         }
     ],
     description: { type: String, required: false },
-    createdBy: { type: String }
+    createdBy: { type: String },
+
+    // // // // question bank // // // // 
+
+    instituteIds: [{
+        instituteId: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },
+        year: { type: Number }
+    }
+    ],
+    modelTestIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "ModelTest" }],
 })
+
+AcademyMcqSchema.index({'instituteIds.instituteId': 1, 'instituteIds.year': 1})
+
+
 
 const AcademyQuizSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-    duration: {type: Number, required:true},
-    start: {type: Date},
-    end: {type: Date},
-    
+    duration: { type: Number, required: true },
+    start: { type: Date },
+    end: { type: Date },
+
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
-    lessonIds: {type: []},
-    questions: {type: []}
-}, {timestamps: true})
+    lessonIds: { type: [] },
+    questions: { type: [] }
+}, { timestamps: true })
 
 
 

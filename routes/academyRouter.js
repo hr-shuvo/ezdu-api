@@ -5,6 +5,7 @@ import academyLessonRoute from "./academy/academyLessonRoute.js";
 import academyContentRoute from "./academy/academyContentRoute.js";
 import academyMcqRoute from "./academy/academyMcqRoute.js";
 import academyQuizRoute from "./academy/academyQuizRoute.js";
+import questionBankRoute from "./academy/questionBankRoute.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
 
 
@@ -17,6 +18,7 @@ router.use('/subjects', academySubjectRoute)
 router.use('/lessons', academyLessonRoute)
 router.use('/c', academyContentRoute)
 router.use('/mcq', academyMcqRoute)
+router.use('/qb', questionBankRoute)
 router.use('/quiz', authenticateUser, academyQuizRoute)
 
 

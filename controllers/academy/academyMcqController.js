@@ -3,14 +3,14 @@ import { AcademyMcq } from "../../models/AcademyModel.js";
 
 
 export const loadAcademyMcq = async (req, res) => {
-    const {subjectId, lessonId} = req.query;
+    const { subjectId, lessonId } = req.query;
 
     const query = {};
 
-    if(lessonId){
+    if (lessonId) {
         query.lessonId = lessonId;
     }
-    if(subjectId){
+    if (subjectId) {
         query.subjectId = subjectId;
     }
 
@@ -21,9 +21,9 @@ export const loadAcademyMcq = async (req, res) => {
     const size = Number(req.query.sz) || 10;
 
     try {
-        const {data, totalCount, totalPage, currentPage} = await _loadAcademyMcq(query, page, size);
+        const { data, totalCount, totalPage, currentPage } = await _loadAcademyMcq(query, page, size);
 
-        res.status(200).json({data, totalCount, totalPage, currentPage});
+        res.status(200).json({ data, totalCount, totalPage, currentPage });
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch mcq", error: error.message });
     }
@@ -33,13 +33,13 @@ export const loadAcademyMcq = async (req, res) => {
 export const getAcademyMcq = async (req, res) => {
     try {
         const mcqId = req.params.id;
-        if(!mcqId){
+        if (!mcqId) {
             return res.status(400).json({ message: "Invalid mcq id", error: error.message });
         }
 
         const mcq = await AcademyMcq.findById(mcqId);
 
-        if(!mcq){
+        if (!mcq) {
             return res.status(404).json({ message: "Failed to fetch mcq", error: error.message });
         }
 
@@ -56,8 +56,14 @@ export const upsertAcademyMcq = async (req, res) => {
 
         const mcq = req.body;
 
+        if (!mcq._id || mcq._id === '') {
+            delete mcq._id;
+        }
+
         if (mcq._id) {
-            await AcademyMcq.findByIdAndUpdate(mcq._id, mcq);
+            await AcademyMcq.findByIdAndUpdate(mcq._id, mcq, {
+                upsert: true
+            });
             res.status(200).json('update success');
         }
         else {
@@ -99,7 +105,7 @@ export const upsertAcademyMcq = async (req, res) => {
 export const _loadAcademyMcq = async (query, page, size) => {
     try {
 
-        const skip = (page-1) *  size;
+        const skip = (page - 1) * size;
 
         const data = await AcademyMcq.find(query).skip(skip).limit(size);
 
@@ -110,7 +116,7 @@ export const _loadAcademyMcq = async (query, page, size) => {
             throw new NotFoundError('mcq not found')
         }
 
-        return {data, totalCount, totalPage, currentPage:page};
+        return { data, totalCount, totalPage, currentPage: page };
 
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch mcq", error: error.message });
