@@ -31,12 +31,13 @@ export const getAcademicInstitute = async (req, res) => {
             return res.status(400).json({ message: "Invalid institute id" });
         }
 
-        const response = await AcademyInstitute.findById(instituteId);
+        const result = await AcademyInstitute.findById(instituteId);
 
-        // console.log(response)
+        if (!result) {
+            return res.status(404).json({message: "Not found institute"});
+        }
 
-        return res.status(404).json({ message: "Failed to fetch institute" });
-
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch institute", error: error.message });
     }
