@@ -97,11 +97,14 @@ export const getAcademicModelTest = async (req, res) => {
             return res.status(400).json({ message: "Invalid model test id" });
         }
 
-        const response = await AcademyModelTest.findById(id);
+        const result = await AcademyModelTest.findById(id);
 
         // console.log(response)
+        if (!result) {
+            return res.status(404).json({message: "Not model test"});
+        }
 
-        return res.status(404).json({ message: "Failed to fetch model test" });
+        res.status(200).json(result);
 
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch model test", error: error.message });

@@ -6,7 +6,7 @@ import {
     loadAcademicModelTest,
     upsertAcademicInstitute,
     upsertAcademicModelTest
-} from "../../controllers/academy/academyInstituteController.js";
+} from "../../controllers/academy/academyQuestionBankController.js";
 
 const router = Router();
 
