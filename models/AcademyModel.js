@@ -64,7 +64,9 @@ const AcademyMcqSchema = new mongoose.Schema({
     // // // // question bank // // // // 
 
     instituteIds: [{
+        _id:false,
         instituteId: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },
+        title: { type: String },
         year: { type: Number }
     }
     ],
