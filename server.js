@@ -58,7 +58,7 @@ app.use(
 
 app.get('/', async (req, res) => {
 
-    res.send({_: 'Hello World', host: allowedOrigins});
+    res.send({_: 'Hello World', host: allowedOrigins, env: process.env.NODE_ENV});
 });
 
 app.get('/api/v1', (req, res) => {
