@@ -33,24 +33,25 @@ app.use(cookieParser());
 app.use(express.json());
 
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (!origin || allowedOrigins.includes(origin) || origin === "null") {
-//             callback(null, true);
-//         } else {
-//             callback(new Error("Not allowed by CORS"));
-//         }
-//     },
-//     credentials: true,
-// };
-// app.use(cors(corsOptions));
-
 app.use(
     cors({
-        origin: allowedOrigins,
-        credentials: true
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS: ' + origin));
+            }
+        },
+        credentials: true,
     })
-)
+);
+
+// app.use(
+//     cors({
+//         origin: allowedOrigins,
+//         credentials: true
+//     })
+// )
 
 
 app.get('/', async (req, res) => {
@@ -81,7 +82,7 @@ app.use('/api/v1/academy', academyRouter);
 
 
 app.use('*', (req, res) => {
-    res.status(404).json({error: 'route not found'});
+    res.status(404).json({ error: 'route not found' });
 });
 
 // Middlewares
