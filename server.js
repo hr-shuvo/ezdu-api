@@ -33,6 +33,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
+console.log('Allowed origins from env:', allowedOrigins);
+
 app.use(
     cors({
         origin: function (origin, callback) {
@@ -56,7 +58,7 @@ app.use(
 
 app.get('/', async (req, res) => {
 
-    res.send('Hello World');
+    res.send({_: 'Hello World', host: allowedOrigins});
 });
 
 app.get('/api/v1', (req, res) => {
