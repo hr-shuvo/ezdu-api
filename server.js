@@ -33,32 +33,32 @@ app.use(cookieParser());
 app.use(express.json());
 
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : [];
-console.log('Allowed origins from env:', allowedOrigins);
-
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS: ' + origin));
-            }
-        },
-        credentials: true,
-    })
-);
+// console.log('Allowed origins from env:', allowedOrigins);
 
 // app.use(
 //     cors({
-//         origin: allowedOrigins,
-//         credentials: true
+//         origin: function (origin, callback) {
+//             if (!origin || allowedOrigins.includes(origin)) {
+//                 callback(null, true);
+//             } else {
+//                 callback(new Error('Not allowed by CORS: ' + origin));
+//             }
+//         },
+//         credentials: true,
 //     })
-// )
+// );
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true
+    })
+)
 
 
 app.get('/', async (req, res) => {
 
-    res.send({_: 'Hello World', host: allowedOrigins, env: process.env.NODE_ENV});
+    res.send({_: 'Hello World', host: allowedOrigins.length, env: process.env.NODE_ENV});
 });
 
 app.get('/api/v1', (req, res) => {

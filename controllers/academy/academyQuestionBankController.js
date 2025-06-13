@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { AcademyInstitute, AcademyModelTest } from "../../models/QuestionBankModel.js";
+import {AcademyMcq} from "../../models/AcademyModel.js"
 
 export const loadAcademicInstitute = async (req, res) => {
     const { type } = req.query;
@@ -34,7 +36,7 @@ export const getAcademicInstitute = async (req, res) => {
         const result = await AcademyInstitute.findById(instituteId);
 
         if (!result) {
-            return res.status(404).json({message: "Not found institute"});
+            return res.status(404).json({ message: "Not found institute" });
         }
 
         res.status(200).json(result);
@@ -63,6 +65,57 @@ export const upsertAcademicInstitute = async (req, res) => {
 
 
 // // // Model Test // // // 
+
+export const loadAcademicSubjectModelTest = async (req, res) => {
+    const { subjectId } = req.query;
+
+    if (!subjectId) {
+        return res.status(400).json({ data: null, message: "No subject found" });
+    }
+
+    const results = await AcademyMcq.aggregate([
+        {
+            $match: {
+                subjectId: new mongoose.Types.ObjectId(subjectId)
+            }
+        },
+        {
+            $unwind: "$instituteIds"
+        },
+        {
+            $group: {
+                _id: {
+                    instituteId: "$instituteIds.instituteId",
+                    title: "$instituteIds.title",
+                    year: "$instituteIds.year"
+                },
+                mcqCount: { $sum: 1 },
+                // mcqlist: {
+                //     $push: {
+                //         _id: "$_id",
+                //         question: "$question",
+                //         passage: "$passage",
+                //         optionList: "$optionList",
+                //         description: "$description",
+                //         lessonId: "$lessonId"
+                //     }
+                // }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                instituteId: "$_id.instituteId",
+                title: "$_id.title",
+                year: "$_id.year",
+                mcqlist: 1,
+                mcqCount: "$mcqCount"
+            }
+        }
+    ]);
+
+    return res.status(200).json({data: results});
+}
 
 export const loadAcademicModelTest = async (req, res) => {
     const { instituteId, subjectId } = req.query;
@@ -101,7 +154,7 @@ export const getAcademicModelTest = async (req, res) => {
 
         // console.log(response)
         if (!result) {
-            return res.status(404).json({message: "Not model test"});
+            return res.status(404).json({ message: "Not model test" });
         }
 
         res.status(200).json(result);

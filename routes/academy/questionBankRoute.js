@@ -5,13 +5,14 @@ import {
     loadAcademicInstitute,
     loadAcademicModelTest,
     upsertAcademicInstitute,
-    upsertAcademicModelTest
+    upsertAcademicModelTest,
+    loadAcademicSubjectModelTest
 } from "../../controllers/academy/academyQuestionBankController.js";
 
 const router = Router();
 
 
-router.get('/', loadAcademicInstitute);
+router.get('/', loadAcademicSubjectModelTest);
 
 
 // institute
