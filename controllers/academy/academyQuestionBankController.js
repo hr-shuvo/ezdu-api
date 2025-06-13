@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { AcademyInstitute, AcademyModelTest } from "../../models/QuestionBankModel.js";
-import {AcademyMcq} from "../../models/AcademyModel.js"
+import { AcademyMcq } from "../../models/AcademyModel.js"
 
 export const loadAcademicInstitute = async (req, res) => {
     const { type } = req.query;
@@ -66,6 +66,7 @@ export const upsertAcademicInstitute = async (req, res) => {
 
 // // // Model Test // // // 
 
+// reutrn institute by subject
 export const loadAcademicSubjectModelTest = async (req, res) => {
     const { subjectId } = req.query;
 
@@ -114,8 +115,91 @@ export const loadAcademicSubjectModelTest = async (req, res) => {
         }
     ]);
 
-    return res.status(200).json({data: results});
+    return res.status(200).json({ data: results });
 }
+
+
+
+export const loadMcqsBySubjectAndInstitute = async (req, res) => {
+    const { subjectId, instituteId } = req.query;
+
+    if (!subjectId || !instituteId) {
+        return res.status(400).json({ error: 'subjectId and instituteId are required' });
+    }
+
+    try {
+
+        const {
+            subjectId,
+            instituteId,
+        } = req.query;
+
+        const page = Number(req.query.pg) || 1;
+        const size = Number(req.query.sz) || 10;
+
+        if (!subjectId || !instituteId) {
+            return res.status(400).json({ error: 'subjectId and instituteId are required' });
+        }
+
+        const skip = (parseInt(page) - 1) * parseInt(size);
+
+        const query = {
+            subjectId,
+            instituteIds: {
+                $elemMatch: { instituteId }
+            }
+        };
+
+        const total = await AcademyMcq.countDocuments(query);
+
+        const mcqs = await AcademyMcq.find(query)
+            .skip(skip)
+            .limit(parseInt(size))
+            .populate('subjectId')
+            .lean();
+
+        const formatted = mcqs.map(mcq => {
+            const match = mcq.instituteIds.find(i =>
+                i.instituteId?.toString() === instituteId
+            );        
+
+            return {
+                ...mcq,
+                subject: mcq.subjectId,
+                subjectId: mcq.subjectId?._id || mcq.subjectId,
+                instituteName: match?.title,
+                year: match?.year || null
+            };
+        });
+
+        res.status(200).json({
+            totalCount:total,
+            currentPage: parseInt(page),
+            totalPage: Math.ceil(total / size),
+            data: formatted
+        });
+
+
+    } catch (error) {
+        console.error('Error fetching MCQs:', error);
+        res.status(500).json({ error: 'Server error fetching MCQs' });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const loadAcademicModelTest = async (req, res) => {
     const { instituteId, subjectId } = req.query;

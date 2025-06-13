@@ -6,13 +6,15 @@ import {
     loadAcademicModelTest,
     upsertAcademicInstitute,
     upsertAcademicModelTest,
-    loadAcademicSubjectModelTest
+    loadAcademicSubjectModelTest,
+    loadMcqsBySubjectAndInstitute
 } from "../../controllers/academy/academyQuestionBankController.js";
 
 const router = Router();
 
 
 router.get('/', loadAcademicSubjectModelTest);
+router.get('/mcq', loadMcqsBySubjectAndInstitute);
 
 
 // institute
