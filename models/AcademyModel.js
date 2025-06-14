@@ -64,7 +64,7 @@ const AcademyMcqSchema = new mongoose.Schema({
     // // // // question bank // // // // 
 
     instituteIds: [{
-        _id:false,
+        _id: false,
         instituteId: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },
         title: { type: String },
         year: { type: Number }
@@ -73,7 +73,7 @@ const AcademyMcqSchema = new mongoose.Schema({
     modelTestIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "ModelTest" }],
 })
 
-AcademyMcqSchema.index({'instituteIds.instituteId': 1, 'instituteIds.year': 1})
+AcademyMcqSchema.index({ 'instituteIds.instituteId': 1, 'instituteIds.year': 1 })
 
 
 
@@ -85,9 +85,31 @@ const AcademyQuizSchema = new mongoose.Schema({
 
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
     lessonIds: { type: [] },
-    questions: { type: [] }
+    questions: { type: [] },
+    xp: { type: Number, default: 0 }
 }, { timestamps: true })
 
+const AcademyProgressSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userName: { type: String, required: true, default: "User" },
+    userImageSrc: { type: String, required: true, default: "/mascot.svg" },
+    totalXp: { type: Number, required: true, default: 0 },
+    lastWeekXp: {
+        type: [
+            {
+                _id: false,
+                day: { type: Date },
+                xp: { type: Number }
+            }
+        ],
+        validate: {
+            validator: function (v) {
+                return v.length <= 10
+            },
+            message: props => `lastWeekXp exceeds the maximum of 7 days`
+        }
+    }
+});
 
 
 
@@ -98,6 +120,7 @@ const AcademyLesson = mongoose.model("AcademyLesson", AcademyLessonSchema);
 const LessonContent = mongoose.model('LessonContent', AcademyLessonContentSchema);
 const AcademyMcq = mongoose.model('AcademyMcq', AcademyMcqSchema);
 const AcademyQuiz = mongoose.model('AcademyQuiz', AcademyQuizSchema);
+const AcademyProgress = mongoose.model('AcademyProgress', AcademyProgressSchema);
 
 export {
     // AcademyLevel,
@@ -106,5 +129,6 @@ export {
     AcademyLesson,
     LessonContent,
     AcademyMcq,
-    AcademyQuiz
+    AcademyQuiz,
+    AcademyProgress
 }

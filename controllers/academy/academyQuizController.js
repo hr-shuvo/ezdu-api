@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { AcademyQuiz, AcademyMcq } from "../../models/AcademyModel.js";
+import { AcademyQuiz, AcademyMcq, AcademyProgress } from "../../models/AcademyModel.js";
 
 
 
@@ -48,7 +48,7 @@ export const getAcademyOngoingQuiz = async (req, res) => {
         });
 
         if (!ongoingQuiz) {
-            return res.status(200).json({data:null, message: "No active quiz in progress" });
+            return res.status(200).json({ data: null, message: "No active quiz in progress" });
         }
 
         return res.status(200).json({ data: ongoingQuiz });
@@ -62,7 +62,7 @@ export const getAcademyOngoingQuiz = async (req, res) => {
 
 export const upsertQuiz = async (req, res) => {
     try {
-        const { _id, subjectId, duration, lessonIds, questions } = req.body;
+        const { _id, subjectId, duration, lessonIds, questions, end } = req.body;
         const userId = req.user.userId;
 
         if (!userId) {
@@ -81,7 +81,7 @@ export const upsertQuiz = async (req, res) => {
         if (_id) {
             const updated = await AcademyQuiz.findOneAndUpdate(
                 { _id, userId },
-                { $set: { questions } },
+                { $set: { questions, end } },
                 { new: true }
             );
 
@@ -133,7 +133,7 @@ export const loadOrCreateQuiz = async (req, res) => {
         });
 
         if (ongoingQuiz) {
-            return res.status(200).json({ quiz: ongoingQuiz });
+            return res.status(200).json({ data: ongoingQuiz });
         }
 
         // 2. No ongoing quiz: Fetch MCQs
@@ -174,4 +174,114 @@ export const loadOrCreateQuiz = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 
+}
+
+export const upsertAcademyQuizXp = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Invalid User", error: error.message });
+        }
+
+        let progress = await AcademyProgress.findOne({ userId });
+
+        const _allQuizzes = await AcademyQuiz.find({ userId }).sort({ createdAt: -1 });
+
+        if (_allQuizzes.length > 10) {
+            const quizzesToDelete = _allQuizzes.slice(10);
+
+            const deleteIds = quizzesToDelete.map(q => q._id);
+            await AcademyQuiz.deleteMany({ _id: { $in: deleteIds } });
+        }
+
+        const { quizId } = req.query;
+        const now = new Date();
+
+        const allQuizzes = await AcademyQuiz.find({
+            userId,
+            end: { $lt: now },
+            $or: [
+                { xp: 0 },
+                { xp: { $exists: false } },
+                { xp: null }
+            ]
+        }).sort({ createdAt: -1 }).limit(10);
+
+
+        let totalNewXp = 0;
+        for (const quiz of allQuizzes) {
+            let xp = 0;
+
+            for (const q of quiz.questions) {
+                const selected = q.selectedOption;
+                if (selected) {
+                    if (selected.correct === true) {
+                        xp += 1;
+                    } else {
+                        xp -= 0.2;
+                    }
+                }
+            }
+
+            xp = Math.max(0, Math.round(xp * 100) / 100);
+
+            quiz.xp = xp;
+            await quiz.save();
+
+            totalNewXp += xp;
+        }
+
+        let currentQuizXp = 0;
+        const quiz = allQuizzes.find(q => q._id.toString() === quizId);
+        if (quiz) {
+            currentQuizXp = quiz.xp;
+        }
+        console.log('quiz: ', quiz);
+        console.log('quiz id: ', quizId);
+        console.log('quiz list: ', allQuizzes);
+
+        const quizStartedAt = new Date(quiz?.createdAt ?? new Date());
+        // quizStartedAt.setDate(now.getDate() - 4)
+
+
+        if (progress) {
+            progress.totalXp += totalNewXp;
+
+            const dayStr = quizStartedAt.toDateString();
+            const index = progress.lastWeekXp.findIndex(entry =>
+                new Date(entry.day).toDateString() === dayStr
+            );
+
+            if (index !== -1) {
+                progress.lastWeekXp[index].xp += totalNewXp;
+            } else {
+                if (progress.lastWeekXp.length >= 10) {
+                    progress.lastWeekXp.shift();
+                }
+                progress.lastWeekXp.push({ day: quizStartedAt, xp: totalNewXp });
+            }
+
+            progress.lastWeekXp.sort((a, b) => new Date(b.day) - new Date(a.day));
+
+            await progress.save();
+        } else {
+            progress = await AcademyProgress.create({
+                userId,
+                totalXp: totalNewXp,
+                lastWeekXp: [{ day: quizStartedAt, xp: totalNewXp }],
+            });
+        }
+        
+
+        return res.status(200).json({
+            data: {
+                xp: currentQuizXp,
+                progress: progress
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+    }
 }
