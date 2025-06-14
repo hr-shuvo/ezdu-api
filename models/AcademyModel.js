@@ -94,6 +94,8 @@ const AcademyProgressSchema = new mongoose.Schema({
     userName: { type: String, required: true, default: "User" },
     userImageSrc: { type: String, required: true, default: "/mascot.svg" },
     totalXp: { type: Number, required: true, default: 0 },
+    lastStreakDay: { type: Date },
+    streakCount: { type: Number },
     lastWeekXp: {
         type: [
             {

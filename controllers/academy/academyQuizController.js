@@ -233,13 +233,23 @@ export const upsertAcademyQuizXp = async (req, res) => {
         }
 
         let currentQuizXp = 0;
-        const quiz = allQuizzes.find(q => q._id.toString() === quizId);
+        const quiz = _allQuizzes.find(q => q._id.toString() === quizId);
         if (quiz) {
-            currentQuizXp = quiz.xp;
+
+            for (const q of quiz.questions) {
+                const selected = q.selectedOption;
+                if (selected) {
+                    if (selected.correct === true) {
+                        currentQuizXp += 1;
+                    } else {
+                        currentQuizXp -= 0.2;
+                    }
+                }
+            }
         }
-        console.log('quiz: ', quiz);
-        console.log('quiz id: ', quizId);
-        console.log('quiz list: ', allQuizzes);
+        // console.log('quiz: ', quiz);
+        // console.log('quiz id: ', quizId);
+        // console.log('quiz list: ', allQuizzes);
 
         const quizStartedAt = new Date(quiz?.createdAt ?? new Date());
         // quizStartedAt.setDate(now.getDate() - 4)
@@ -264,15 +274,51 @@ export const upsertAcademyQuizXp = async (req, res) => {
 
             progress.lastWeekXp.sort((a, b) => new Date(b.day) - new Date(a.day));
 
+            // // // streak // // //
+
+            const today = new Date();
+            const yesterday = new Date(Date.UTC(
+                today.getUTCFullYear(),
+                today.getUTCMonth(),
+                today.getUTCDate() - 1
+            ));
+
+            const lastStreakDate = new Date(Date.UTC(
+                progress.lastStreakDay.getUTCFullYear(),
+                progress.lastStreakDay.getUTCMonth(),
+                progress.lastStreakDay.getUTCDate()
+            ));
+
+            if (lastStreakDate.getTime() === yesterday.getTime()) {
+                progress.streakCount += 1;
+            } else {
+                progress.streakCount = 1;
+            }
+
+            progress.lastStreakDay = new Date(Date.UTC(
+                today.getUTCFullYear(),
+                today.getUTCMonth(),
+                today.getUTCDate()
+            ));
+
+            // // // end streak // // //
+
             await progress.save();
         } else {
+            const lsd = new Date(Date.UTC(
+                today.getUTCFullYear(),
+                today.getUTCMonth(),
+                today.getUTCDate()
+            ));
             progress = await AcademyProgress.create({
                 userId,
                 totalXp: totalNewXp,
                 lastWeekXp: [{ day: quizStartedAt, xp: totalNewXp }],
+                lastStreakDay:lsd,
+                streakCount:1
             });
         }
-        
+
 
         return res.status(200).json({
             data: {
