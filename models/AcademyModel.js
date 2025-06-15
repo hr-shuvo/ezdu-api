@@ -93,7 +93,7 @@ const AcademyProgressSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     userName: { type: String, required: true, default: "User" },
     userImageSrc: { type: String, required: true, default: "/mascot.svg" },
-    totalXp: { type: Number, required: true, default: 0 },
+    totalXp: { type: Number, required: true, default: 0, set: v => Math.round(v * 100) / 100 },
     lastStreakDay: { type: Date },
     streakCount: { type: Number },
     lastWeekXp: {

@@ -266,7 +266,7 @@ export const upsertAcademyQuizXp = async (req, res) => {
             if (index !== -1) {
                 progress.lastWeekXp[index].xp += totalNewXp;
             } else {
-                if (progress.lastWeekXp.length >= 10) {
+                if (progress.lastWeekXp.length >= 7) {
                     progress.lastWeekXp.shift();
                 }
                 progress.lastWeekXp.push({ day: quizStartedAt, xp: totalNewXp });
