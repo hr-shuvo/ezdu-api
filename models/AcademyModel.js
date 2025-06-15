@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const academyVersionTypes = ["BN", "EN"];
 const academyLevelTypes = ["PRIMARY", "SECONDARY", "HIGHER_SECONDARY"];
+const segmentTypes = ["JUNIOR", "SSC", "HSC", "ADMISSION", "JOB"];
 
 // const AcademyLevelSchema = new mongoose.Schema({
 //     title: { type: String, required: true },
@@ -12,7 +13,8 @@ const academyLevelTypes = ["PRIMARY", "SECONDARY", "HIGHER_SECONDARY"];
 const AcademyClassSchema = new mongoose.Schema({
     title: { type: String, required: true },
     version: { type: String, enum: academyVersionTypes, required: true, default: academyVersionTypes[0] },
-    level: { type: String, enum: academyLevelTypes, ref: "AcademyLevel" },
+    level: { type: String, enum: academyLevelTypes },
+    segment: { type: String, enum: segmentTypes, required: true }
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
@@ -21,6 +23,8 @@ const AcademySubjectSchema = new mongoose.Schema({
     hasSubjectPaper: { type: Boolean, default: false },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
     classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
+    segments: [{ type: String, enum: segmentTypes, required: true }]
+
 }, { timestamps: true });
 
 
@@ -31,6 +35,8 @@ const AcademyLessonSchema = new mongoose.Schema({
     order: { type: Number },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson" },
+    segment: { type: String, enum: segmentTypes }
+
 })
 
 const AcademyLessonContentSchema = new mongoose.Schema({
@@ -112,6 +118,19 @@ const AcademyProgressSchema = new mongoose.Schema({
         }
     }
 });
+
+const LearningPathSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String },
+    segment: { type: String, enum: segmentTypes, required: true },
+    subjects: [{
+        subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
+        weight: { type: Number, default: 1 }
+    }],
+
+    isPublic: { type: Boolean, default: true },
+
+}, { timestamps: true });
 
 
 
