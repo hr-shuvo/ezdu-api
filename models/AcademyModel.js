@@ -14,7 +14,7 @@ const AcademyClassSchema = new mongoose.Schema({
     title: { type: String, required: true },
     version: { type: String, enum: academyVersionTypes, required: true, default: academyVersionTypes[0] },
     level: { type: String, enum: academyLevelTypes },
-    segment: { type: String, enum: segmentTypes, required: true }
+    segment: { type: String, enum: segmentTypes }
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
@@ -24,7 +24,7 @@ const AcademySubjectSchema = new mongoose.Schema({
     hasSubjectPaper: { type: Boolean, default: false },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
     classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
-    segments: [{ type: String, enum: segmentTypes, required: true }]
+    segment: { type: String, enum: segmentTypes }
 
 }, { timestamps: true });
 
@@ -143,6 +143,7 @@ const AdmissionCategorySchema = new mongoose.Schema({
     description: { type: String },
     segment: { type: String, enum: segmentTypes, required: true },
     subjects: [{
+        _id:false,
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
         title: { type: String}
     }],

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { _loadAcademicClass } from "../../services/academy/academicClassService.js";
 import { StatusCodes } from "http-status-codes";
 import { AdmissionCategory } from "../../models/AcademyModel.js";

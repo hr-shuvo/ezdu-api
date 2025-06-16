@@ -3,7 +3,7 @@ import { _loadAcademicSubject } from "../../services/academy/academySubjectServi
 import { AcademyClass, AcademySubject } from "../../models/AcademyModel.js";
 
 export const loadAcademicSubject = async (req, res) => {
-    const { isTree, classId, classIds } = req.query;
+    const { isTree, classId, classIds, segment } = req.query;
 
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;
@@ -18,9 +18,14 @@ export const loadAcademicSubject = async (req, res) => {
         query.classId = { $in: classIds };
     }
 
-    if (req.query.classId) {
-        query.classId = req.query.classId;
+    if (classId) {
+        query.classId = classId;
     }
+
+    if(segment){
+        query.segment = segment;
+    }
+
 
     try {
         // const data = await Course.find();
