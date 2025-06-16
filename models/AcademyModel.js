@@ -18,6 +18,7 @@ const AcademyClassSchema = new mongoose.Schema({
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     subTitle: { type: String },
     hasSubjectPaper: { type: Boolean, default: false },
@@ -120,16 +121,31 @@ const AcademyProgressSchema = new mongoose.Schema({
 });
 
 const LearningPathSchema = new mongoose.Schema({
+    // id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     description: { type: String },
     segment: { type: String, enum: segmentTypes, required: true },
     subjects: [{
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
-        weight: { type: Number, default: 1 }
+        weight: { type: Number, default: 0 }
     }],
 
     isPublic: { type: Boolean, default: true },
 
+}, { timestamps: true });
+
+// lesson progress for check how may done
+//
+
+const AdmissionCategorySchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    description: { type: String },
+    segment: { type: String, enum: segmentTypes, required: true },
+    subjects: [{
+        subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
+        title: { type: String}
+    }],
 }, { timestamps: true });
 
 
@@ -143,6 +159,9 @@ const AcademyMcq = mongoose.model('AcademyMcq', AcademyMcqSchema);
 const AcademyQuiz = mongoose.model('AcademyQuiz', AcademyQuizSchema);
 const AcademyProgress = mongoose.model('AcademyProgress', AcademyProgressSchema);
 
+const AdmissionCategory = mongoose.model('AdmissionCategory', AdmissionCategorySchema);
+
+
 export {
     // AcademyLevel,
     AcademyClass,
@@ -151,5 +170,7 @@ export {
     LessonContent,
     AcademyMcq,
     AcademyQuiz,
-    AcademyProgress
+    AcademyProgress,
+
+    AdmissionCategory
 }
