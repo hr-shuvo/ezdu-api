@@ -50,7 +50,14 @@ export const getAdmissionCategory = async (req, res) => {
             return res.status(404).json({ message: "Failed to fetch admission" });
         }
 
-        res.status(200).json(result);
+        const units = await _loadAdmissionCategoryUnit({ categoryId: result._id }, 1, 100);
+        const admissionWithUnits = {
+            ...result.toObject?.() ?? result, // ensure plain object if Mongoose doc
+            units: units.data,
+        };
+
+
+        res.status(200).json(admissionWithUnits);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch class", error: error.message });
     }
@@ -83,7 +90,7 @@ export const loadAdmissionCategoryUnit = async (req, res) => {
 
     const query = {};
 
-    if(categoryId){
+    if (categoryId) {
         query.categoryId = categoryId;
     }
     if (segment) {
