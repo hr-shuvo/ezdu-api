@@ -150,6 +150,20 @@ const AdmissionCategorySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
+const AdmissionCategoryUnitSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    description: { type: String },
+    segment: { type: String, enum: segmentTypes, required: true },
+    categoryId: {type: mongoose.Schema.Types.ObjectId, ref: "AdmissionCategory"},
+    subjects: [{
+        _id:false,
+        subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
+        title: { type: String}
+    }],
+}, { timestamps: true });
+
+
 
 // const AcademyLevel = mongoose.model("AcademyLevel", AcademyLevelSchema);
 const AcademyClass = mongoose.model("AcademyClass", AcademyClassSchema);
@@ -161,6 +175,7 @@ const AcademyQuiz = mongoose.model('AcademyQuiz', AcademyQuizSchema);
 const AcademyProgress = mongoose.model('AcademyProgress', AcademyProgressSchema);
 
 const AdmissionCategory = mongoose.model('AdmissionCategory', AdmissionCategorySchema);
+const AdmissionCategoryUnit = mongoose.model('AdmissionCategoryUnit', AdmissionCategoryUnitSchema);
 
 
 export {
@@ -173,5 +188,6 @@ export {
     AcademyQuiz,
     AcademyProgress,
 
-    AdmissionCategory
+    AdmissionCategory,
+    AdmissionCategoryUnit
 }
