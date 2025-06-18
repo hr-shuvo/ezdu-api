@@ -11,9 +11,12 @@ export const getAcademyProgress = async (req, res) => {
         const progress = await AcademyProgress.findOne({ userId });
 
         const today = new Date();
-        const dayStr = today.toDateString();
-        const index = progress.lastWeekXp.findIndex(entry =>
-            new Date(entry.day).toDateString() === dayStr
+        today.setHours(0, 0, 0, 0);
+        const index = progress.lastWeekXp.findIndex(entry => {
+            const entryDate = new Date(entry.day);
+            entryDate.setHours(0, 0, 0, 0);
+            return entryDate.getTime() === today.getTime();
+        }
         );
 
         if (progress) {
