@@ -61,15 +61,23 @@ export const upsertAcademyMcq = async (req, res) => {
         if (req.file) {
 
             try {
-                const response = await cloudinary.v2.uploader.upload(req.file.path,{
-                    folder: "ezdu"
-                });
+                const response = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: "ezdu",
+                    transformation: [
+                        { width: 600, crop: 'scale' },
+                        { quality: 'auto:low' },
+                        { fetch_format: 'auto' }
+                    ],
+                    format: 'jpg',
+                    resource_type:'image'
+                },
+            );
                 await fs.unlink(req.file.path);
 
                 mcq.imageUrl = response.secure_url;
                 mcq.imagePublicId = response.public_id;
 
-                if(oldImagePublicId){
+                if (oldImagePublicId) {
                     await cloudinary.v2.uploader.destroy(oldImagePublicId)
                 }
             } catch (err) {
