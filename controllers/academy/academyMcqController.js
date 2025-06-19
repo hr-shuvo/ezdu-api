@@ -54,9 +54,13 @@ export const getAcademyMcq = async (req, res) => {
 
 export const upsertAcademyMcq = async (req, res) => {
     try {
-        const mcq = { ...req.body };
+        let mcq = { ...req.body };
+        mcq.instituteIds = JSON.parse(mcq.instituteIds);
+
+
         const oldMcq = await AcademyMcq.findById(mcq._id);
         const oldImagePublicId = oldMcq?.imagePublicId;
+        // console.log('request  gotcha')
 
         if (req.file) {
 
@@ -69,9 +73,9 @@ export const upsertAcademyMcq = async (req, res) => {
                         { fetch_format: 'auto' }
                     ],
                     format: 'jpg',
-                    resource_type:'image'
+                    resource_type: 'image'
                 },
-            );
+                );
                 await fs.unlink(req.file.path);
 
                 mcq.imageUrl = response.secure_url;
