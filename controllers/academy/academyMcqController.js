@@ -55,6 +55,9 @@ export const getAcademyMcq = async (req, res) => {
 export const upsertAcademyMcq = async (req, res) => {
     try {
         let mcq = { ...req.body };
+        if(mcq.optionList && mcq.optionList.length > 0)
+        mcq.optionList = JSON.parse(mcq.optionList);
+        if(mcq.instituteIds && mcq.instituteIds.length > 0)
         mcq.instituteIds = JSON.parse(mcq.instituteIds);
 
 
