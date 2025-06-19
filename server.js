@@ -19,6 +19,11 @@ import { seedData } from "./utils/seedData.js";
 import academyRouter from "./routes/academyRouter.js";
 import admissionRoute from './routes/academy/admissionRoute.js';
 import challengeProgressRouter from "./routes/challengeProgressRouter.js";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import cloudinary from "cloudinary";
+
 
 
 dotenv.config();
@@ -29,6 +34,14 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.resolve(__dirname, './public')))
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KYE,
+    api_secret: process.env.CLOUD_API_SECRET
+});
 
 app.use(cookieParser());
 app.use(express.json());
@@ -59,7 +72,7 @@ app.use(
 
 app.get('/', async (req, res) => {
 
-    res.send({_: 'Hello World', host: allowedOrigins.length, env: process.env.NODE_ENV});
+    res.send({ _: 'Hello World', host: allowedOrigins.length, env: process.env.NODE_ENV });
 });
 
 app.get('/api/v1', (req, res) => {

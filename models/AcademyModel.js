@@ -57,6 +57,8 @@ const AcademyMcqSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson", required: true },
     passage: { type: String },
+    imageUrl: { type: String },
+    imagePublicId: {type: String},
     question: { type: String, required: true },
     optionList: [
         {
@@ -143,9 +145,9 @@ const AdmissionCategorySchema = new mongoose.Schema({
     description: { type: String },
     segment: { type: String, enum: segmentTypes, required: true },
     subjects: [{
-        _id:false,
+        _id: false,
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
-        title: { type: String}
+        title: { type: String }
     }],
 }, { timestamps: true });
 
@@ -155,11 +157,11 @@ const AdmissionCategoryUnitSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
     segment: { type: String, enum: segmentTypes, required: true },
-    categoryId: {type: mongoose.Schema.Types.ObjectId, ref: "AdmissionCategory"},
+    categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "AdmissionCategory" },
     subjects: [{
-        _id:false,
+        _id: false,
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
-        title: { type: String}
+        title: { type: String }
     }],
 }, { timestamps: true });
 

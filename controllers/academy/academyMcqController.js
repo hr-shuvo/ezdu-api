@@ -1,5 +1,7 @@
 import { AcademyMcq } from "../../models/AcademyModel.js";
-
+import { processImageBuffer } from "../../utils/imageHelper.js";
+import cloudinary from "cloudinary";
+import { promises as fs } from 'fs';
 
 
 export const loadAcademyMcq = async (req, res) => {
@@ -52,23 +54,39 @@ export const getAcademyMcq = async (req, res) => {
 
 export const upsertAcademyMcq = async (req, res) => {
     try {
-        // const data = await _loadModules();
+        const mcq = { ...req.body };
+        const oldMcq = await AcademyMcq.findById(mcq._id);
+        const oldImagePublicId = oldMcq?.imagePublicId;
 
-        const mcq = req.body;
+        if (req.file) {
 
-        if (!mcq._id || mcq._id === '') {
-            delete mcq._id;
+            try {
+                const response = await cloudinary.v2.uploader.upload(req.file.path,{
+                    folder: "ezdu"
+                });
+                await fs.unlink(req.file.path);
+
+                mcq.imageUrl = response.secure_url;
+                mcq.imagePublicId = response.public_id;
+
+                if(oldImagePublicId){
+                    await cloudinary.v2.uploader.destroy(oldImagePublicId)
+                }
+            } catch (err) {
+                return res.status(400).json({ error: err.message });
+            }
         }
 
         if (mcq._id) {
             await AcademyMcq.findByIdAndUpdate(mcq._id, mcq, {
                 upsert: true
             });
+
             res.status(200).json('update success');
         }
         else {
             await AcademyMcq.create(mcq)
-            res.status(200).json('create success');
+            res.status(201).json('create success');
         }
 
 
