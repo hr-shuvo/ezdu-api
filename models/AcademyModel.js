@@ -149,6 +149,9 @@ const AdmissionCategorySchema = new mongoose.Schema({
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
         title: { type: String }
     }],
+
+    pathTitle: {type:String},
+    pathDescription: {type: String}
 }, { timestamps: true });
 
 
@@ -163,6 +166,9 @@ const AdmissionCategoryUnitSchema = new mongoose.Schema({
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
         title: { type: String }
     }],
+
+    pathTitle: {type:String},
+    pathDescription: {type: String}
 }, { timestamps: true });
 
 
