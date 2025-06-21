@@ -30,9 +30,9 @@ const UserSchema = new mongoose.Schema({
     avatar: String,
     avatarPublicId: String
 
-});
+}, { timestamps: true });
 
-UserSchema.methods.toJSON = function() {
+UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;
     return user;
