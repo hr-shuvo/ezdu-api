@@ -1,8 +1,11 @@
+import mongoose from "mongoose";
 import { AcademyProgress } from "../../models/AcademyModel.js";
+import User from "../../models/UserModel.js"
 
 export const getAcademyProgress = async (req, res) => {
     try {
         const userId = req.user.userId;
+        console.log(userId);
 
         if (!userId) {
             return res.status(401).json({ message: "Invalid User", error: error.message });
@@ -20,7 +23,7 @@ export const getAcademyProgress = async (req, res) => {
                 const entryDate = new Date(entry.day);
                 entryDate.setUTCHours(0, 0, 0, 0);
                 return entryDate.getTime() === today.getTime();
-            } );
+            });
 
             if (index === -1) {
                 // if (progress.lastWeekXp.length >= 7) {
@@ -31,13 +34,13 @@ export const getAcademyProgress = async (req, res) => {
                     b.day.getTime() - a.day.getTime()
                 );
 
-                if (progress.lastWeekXp.length >= 7) {
+                if (progress.lastWeekXp.length > 7) {
                     progress.lastWeekXp = progress.lastWeekXp.slice(0, 7)
                 }
                 await progress.save();
             }
         } else {
-            const user = await User.findById(userid);
+            const user = await User.findById(userId);
 
             progress = new AcademyProgress({
                 userName: user?.name,
@@ -46,7 +49,7 @@ export const getAcademyProgress = async (req, res) => {
                 streak: 1,
                 lastStreakDay: today,
             });
-            await progress.save();
+            // await progress.save();
         }
 
         return res.status(200).json({ data: progress });
@@ -64,7 +67,7 @@ export const getAcademyLeaderboard = async (req, res) => {
         const userId = req.user?.userId;
         const totalUsers = await AcademyProgress.countDocuments();
 
-        if (!userId || totalUsers < 50) {
+        if (!userId || totalUsers <= 50) {
             const all = await AcademyProgress.find().limit(50).sort({ totalXp: -1 });
 
             const leaderboard = all.map((p, i) => ({
@@ -74,58 +77,60 @@ export const getAcademyLeaderboard = async (req, res) => {
                 isCurrentUser: p.userId.toString() === userId
             }));
 
-            return res.json({ data: all });
+            return res.json({ data: leaderboard });
         }
 
-        console.log('user id gotcha')
+        // console.log('user id gotcha ,', userId)
+        const objectUserId = new mongoose.Types.ObjectId(userId);
 
-        const userProgress = await AcademyProgress.findOne({ userId });
-
-        const currentXp = userProgress?.totalXp | 0;
-
-        const currentRank = await AcademyProgress.countDocuments({
-            totalXp: { $gt: currentXp }
-        }) + 1;
-
-
-        const topUsers = await AcademyProgress.find()
-            .sort({ totalXp: -1 })
-            .limit(5);
-
-        const aroundLimit = 2;
-
-        const usersAroundMe = await AcademyProgress.aggregate([
+        const userRankResult = await AcademyProgress.aggregate([
             {
                 $setWindowFields: {
                     sortBy: { totalXp: -1 },
-                    output: {
-                        rank: { $rank: {} }
-                    }
+                    output: { rank: { $rank: {} } }
+                }
+            },
+            { $match: { userId: objectUserId } },
+            { $limit: 1 }
+        ]);
+
+        if (userRankResult.length === 0) {
+            // User not found, handle as needed
+            throw new Error("User progress not found");
+        }
+
+        const userRank = userRankResult[0].rank;
+
+        const aroundUsers = await AcademyProgress.aggregate([
+            {
+                $setWindowFields: {
+                    sortBy: { totalXp: -1 },
+                    output: { rank: { $rank: {} } }
                 }
             },
             {
                 $match: {
-                    rank: { $gte: currentRank - aroundLimit, $lte: currentRank + aroundLimit }
+                    rank: { $gte: userRank - 20, $lte: userRank + 20 }
                 }
+            },
+            {
+                $sort: { rank: 1 }
             }
         ]);
 
-        const topList = topUsers.map((user, index) => ({
+        const leaderboard = aroundUsers.map(user => ({
             userId: user.userId,
-            totalXp: user.totalXp,
-            rank: index + 1,
-            isCurrentUser: user.userId.toString() === userId
-        }));
-
-        const aroundList = usersAroundMe.map(user => ({
-            userId: user.userId,
+            name: user.userName,
             totalXp: user.totalXp,
             rank: user.rank,
-            isCurrentUser: user.userId.toString() === userId
+            isCurrentUser: user.userId.toString() === userId.toString()
         }));
 
 
-        const leaderboard = [...topList, ...aroundList];
+
+
+
+
 
 
         return res.status(200).json({ data: leaderboard });

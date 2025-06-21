@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { AcademyQuiz, AcademyMcq, AcademyProgress } from "../../models/AcademyModel.js";
+import User from "../../models/UserModel.js"
+
 
 
 
@@ -279,7 +281,7 @@ export const upsertAcademyQuizXp = async (req, res) => {
 
             progress.lastWeekXp.sort((a, b) => new Date(b.day) - new Date(a.day));
 
-            if (progress.lastWeekXp.length >= 7) {
+            if (progress.lastWeekXp.length > 7) {
                 // progress.lastWeekXp.shift();
                 progress.lastWeekXp = progress.lastWeekXp.slice(0, 7);
             }
@@ -324,7 +326,10 @@ export const upsertAcademyQuizXp = async (req, res) => {
             //     today.getUTCMonth(),
             //     today.getUTCDate()
             // ));
+            const user = await User.findById(userId);
+
             progress = await AcademyProgress.create({
+                userName: user?.name || "unKnown",
                 userId,
                 totalXp: totalNewXp,
                 lastWeekXp: [{ day: quizStartedAt, xp: totalNewXp }],
