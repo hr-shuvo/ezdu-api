@@ -197,6 +197,7 @@ export const upsertAcademyQuizXp = async (req, res) => {
 
         const { quizId } = req.query;
         const now = new Date();
+        const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
         const allQuizzes = await AcademyQuiz.find({
             userId,
@@ -251,32 +252,43 @@ export const upsertAcademyQuizXp = async (req, res) => {
         // console.log('quiz id: ', quizId);
         // console.log('quiz list: ', allQuizzes);
 
-        const quizStartedAt = new Date(quiz?.createdAt ?? new Date());
-        // quizStartedAt.setDate(now.getDate() - 4)
+        const quizStartedAt = new Date(quiz?.createdAt ?? now);
+        // quizStartedAt.setDate(now.getDate() - 2)
+
+        const quizDayUTC = new Date(Date.UTC(
+            quizStartedAt.getUTCFullYear(),
+            quizStartedAt.getUTCMonth(),
+            quizStartedAt.getUTCDate()
+        ));
 
 
         if (progress) {
             progress.totalXp += totalNewXp;
 
-            const dayStr = quizStartedAt.toDateString();
+            // const dayStr = quizStartedAt.toDateString();
             const index = progress.lastWeekXp.findIndex(entry =>
-                new Date(entry.day).toDateString() === dayStr
+                // new Date(entry.day).toDateString() === dayStr
+                sameUtcDay(new Date(entry.day), quizStartedAt)
             );
 
             if (index !== -1) {
                 progress.lastWeekXp[index].xp += totalNewXp;
             } else {
-                if (progress.lastWeekXp.length >= 7) {
-                    progress.lastWeekXp.shift();
-                }
-                progress.lastWeekXp.push({ day: quizStartedAt, xp: totalNewXp });
+                progress.lastWeekXp.push({ day: quizDayUTC, xp: totalNewXp });
             }
 
             progress.lastWeekXp.sort((a, b) => new Date(b.day) - new Date(a.day));
 
+            if (progress.lastWeekXp.length >= 7) {
+                // progress.lastWeekXp.shift();
+                progress.lastWeekXp = progress.lastWeekXp.slice(0, 7);
+            }
+
+
+
             // // // streak // // //
 
-            const today = new Date();
+
             const yesterday = new Date(Date.UTC(
                 today.getUTCFullYear(),
                 today.getUTCMonth(),
@@ -295,27 +307,29 @@ export const upsertAcademyQuizXp = async (req, res) => {
                 progress.streakCount = 1;
             }
 
-            progress.lastStreakDay = new Date(Date.UTC(
-                today.getUTCFullYear(),
-                today.getUTCMonth(),
-                today.getUTCDate()
-            ));
+            // progress.lastStreakDay = new Date(Date.UTC(
+            //     today.getUTCFullYear(),
+            //     today.getUTCMonth(),
+            //     today.getUTCDate()
+            // ));
+
+            progress.lastStreakDay = today;
 
             // // // end streak // // //
 
             await progress.save();
         } else {
-            const lsd = new Date(Date.UTC(
-                today.getUTCFullYear(),
-                today.getUTCMonth(),
-                today.getUTCDate()
-            ));
+            // const lsd = new Date(Date.UTC(
+            //     today.getUTCFullYear(),
+            //     today.getUTCMonth(),
+            //     today.getUTCDate()
+            // ));
             progress = await AcademyProgress.create({
                 userId,
                 totalXp: totalNewXp,
                 lastWeekXp: [{ day: quizStartedAt, xp: totalNewXp }],
-                lastStreakDay:lsd,
-                streakCount:1
+                lastStreakDay: today,
+                streakCount: 1
             });
         }
 
@@ -330,4 +344,12 @@ export const upsertAcademyQuizXp = async (req, res) => {
     catch (error) {
         res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
     }
+}
+
+
+
+function sameUtcDay(a, b) {
+    return a.getUTCFullYear() === b.getUTCFullYear()
+        && a.getUTCMonth() === b.getUTCMonth()
+        && a.getUTCDate() === b.getUTCDate();
 }
