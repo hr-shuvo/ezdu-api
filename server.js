@@ -7,7 +7,7 @@ import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
 import authRouter from "./routes/authRouter.js";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { authenticateUser } from "./middleware/authMiddleware.js";
+import { authenticateUser, optionalAuth } from "./middleware/authMiddleware.js";
 import userRouter from "./routes/userRouter.js";
 import courseRoute from "./routes/courseRoute.js";
 import moduleRouter from "./routes/moduleRoute.js";
@@ -19,6 +19,7 @@ import { seedData } from "./utils/seedData.js";
 import academyRouter from "./routes/academyRouter.js";
 import admissionRoute from './routes/academy/admissionRoute.js';
 import challengeProgressRouter from "./routes/challengeProgressRouter.js";
+import {getAcademyLeaderboard} from "./controllers/academy/academyProgressController.js"
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -96,6 +97,8 @@ app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 
 app.use('/api/v1/academy', academyRouter);
 app.use('/api/v1/admission', admissionRoute);
+
+app.use('/api/v1/leaderboard', optionalAuth, getAcademyLeaderboard)
 
 
 app.use('*', (req, res) => {

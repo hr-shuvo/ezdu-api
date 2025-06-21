@@ -10,12 +10,17 @@ const withValidationErrors = (validateValues) => {
         validateValues,
         (req, res, next) => {
             const errors = validationResult(req);
-            if(!errors.isEmpty()) {
-                const errorMessages = errors.array().map((error) => error.message);
+            if (!errors.isEmpty()) {
+                const errorMessages = errors.array().map((error) => error.msg);
 
-                if(errorMessages[0].startsWith('not authorized')) {
+                if (
+                    errorMessages.length > 0 &&
+                    typeof errorMessages[0] === 'string' &&
+                    errorMessages[0].startsWith('not authorized')
+                ) {
                     throw new UnAuthorizedError('not authorized to perform this action');
                 }
+
 
                 throw new BadRequestError(errorMessages)
             }
@@ -29,16 +34,16 @@ export const validateTest = withValidationErrors([
     body('name')
         .notEmpty()
         .withMessage('name is required')
-        .isLength({min: 3, max: 50})
+        .isLength({ min: 3, max: 50 })
         .withMessage('name must be at least 3 characters')
         .trim()
 ]);
 
 export const validateIdParam = withValidationErrors([
-    param('id').custom(async (value, {req}) => {
+    param('id').custom(async (value, { req }) => {
         const isValidId = mongoose.Types.ObjectId.isValid(value);
 
-        if(!isValidId) {
+        if (!isValidId) {
             throw new BadRequestError('invalid MongoDB id');
         }
     })
@@ -49,7 +54,7 @@ export const validateRegisterInput = withValidationErrors([
     body('name')
         .notEmpty()
         .withMessage('name is required')
-        .isLength({min: 3, max: 50})
+        .isLength({ min: 3, max: 50 })
         .withMessage('name must be at least 3 characters')
         .trim(),
     body('email')
@@ -58,16 +63,16 @@ export const validateRegisterInput = withValidationErrors([
         .isEmail()
         .withMessage('email is invalid')
         .custom(async (email) => {
-            const user = await User.findOne({email});
+            const user = await User.findOne({ email });
 
-            if(user) {
+            if (user) {
                 throw new BadRequestError('email already exists');
             }
         }),
     body('password')
         .notEmpty()
         .withMessage('password is required')
-        .isLength({min: 4})
+        .isLength({ min: 4 })
         .withMessage('password must be at least 4 characters')
 ]);
 
@@ -85,15 +90,15 @@ export const validateLoginInput = withValidationErrors([
 export const validateUpdateUserInput = withValidationErrors([
     body('name')
         .optional()
-        .isLength({min: 3, max: 50})
+        .isLength({ min: 3, max: 50 })
         .withMessage('name must be at least 3 characters')
         .trim(),
     body('email')
         .optional()
         .isEmail()
         .withMessage('email is invalid')
-        .custom(async (email, {req}) => {
-            const user = await User.findOne({email});
+        .custom(async (email, { req }) => {
+            const user = await User.findOne({ email });
 
             if (user && user._id.toString() !== req.user.userId) {
                 throw new BadRequestError('email already exists');
@@ -101,7 +106,7 @@ export const validateUpdateUserInput = withValidationErrors([
         }),
     body('password')
         .optional()
-        .isLength({min: 4})
+        .isLength({ min: 4 })
         .withMessage('password must be at least 4 characters'),
     body('lastName').notEmpty().withMessage('lastName is required').trim(),
     body('location').notEmpty().withMessage('location is required').trim(),
