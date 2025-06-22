@@ -72,6 +72,7 @@ export const getAcademyLeaderboard = async (req, res) => {
 
             const leaderboard = all.map((p, i) => ({
                 userId: p.userId,
+                name: p.userName,
                 totalXp: p.totalXp,
                 rank: i + 1,
                 isCurrentUser: p.userId.toString() === userId
