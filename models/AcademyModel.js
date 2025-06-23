@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const academyVersionTypes = ["BN", "EN"];
 const academyLevelTypes = ["PRIMARY", "SECONDARY", "HIGHER_SECONDARY"];
 const segmentTypes = ["JUNIOR", "SSC", "HSC", "ADMISSION", "JOB"];
+const academyGroupTypes = ['SCIENCE', 'ARTS', 'COMMERCE'];
 
 // const AcademyLevelSchema = new mongoose.Schema({
 //     title: { type: String, required: true },
@@ -14,7 +15,12 @@ const AcademyClassSchema = new mongoose.Schema({
     title: { type: String, required: true },
     version: { type: String, enum: academyVersionTypes, required: true, default: academyVersionTypes[0] },
     level: { type: String, enum: academyLevelTypes },
-    segment: { type: String, enum: segmentTypes }
+    segment: { type: String, enum: segmentTypes },
+    groups: [{
+        _id: false,
+        type: String,
+        enum: academyGroupTypes
+    }]
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
@@ -24,8 +30,12 @@ const AcademySubjectSchema = new mongoose.Schema({
     hasSubjectPaper: { type: Boolean, default: false },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
     classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
+    group: {
+        type: String,
+        enum: ['all', 'science', 'arts', 'commerce'],
+        default: 'all'
+    },
     segment: { type: String, enum: segmentTypes }
-
 }, { timestamps: true });
 
 
@@ -37,7 +47,6 @@ const AcademyLessonSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson" },
     segment: { type: String, enum: segmentTypes }
-
 })
 
 const AcademyLessonContentSchema = new mongoose.Schema({
@@ -58,7 +67,7 @@ const AcademyMcqSchema = new mongoose.Schema({
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson", required: true },
     passage: { type: String },
     imageUrl: { type: String },
-    imagePublicId: {type: String},
+    imagePublicId: { type: String },
     question: { type: String, required: true },
     optionList: [
         {
@@ -150,8 +159,8 @@ const AdmissionCategorySchema = new mongoose.Schema({
         title: { type: String }
     }],
 
-    pathTitle: {type:String},
-    pathDescription: {type: String}
+    pathTitle: { type: String },
+    pathDescription: { type: String }
 }, { timestamps: true });
 
 
@@ -167,8 +176,8 @@ const AdmissionCategoryUnitSchema = new mongoose.Schema({
         title: { type: String }
     }],
 
-    pathTitle: {type:String},
-    pathDescription: {type: String}
+    pathTitle: { type: String },
+    pathDescription: { type: String }
 }, { timestamps: true });
 
 

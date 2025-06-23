@@ -3,8 +3,11 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
     name: {
+        type: String
+    },
+    username: {
         type: String,
-        required: true
+        unique: true
     },
     email: {
         type: String,
@@ -28,7 +31,27 @@ const UserSchema = new mongoose.Schema({
         default: 'user'
     },
     avatar: String,
-    avatarPublicId: String
+    avatarPublicId: String,
+
+    userType: {
+        category: { String, enum: ['class', 'ssc', 'hsc', 'admission', 'job'] },
+        classId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "AcademyClass",
+            default: null
+        },
+        group: {
+            type: String,
+            enum: ['science', 'arts', 'commerce'],
+            default: null // Only for ssc and hsc
+        },
+        jobTrack: {
+            type: String,
+            enum: ['bcs', 'bank', 'govt', 'general'],
+            default: null // Only for job
+        }
+
+    }
 
 }, { timestamps: true });
 
