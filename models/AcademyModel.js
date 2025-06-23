@@ -12,15 +12,27 @@ const academyGroupTypes = ['SCIENCE', 'ARTS', 'COMMERCE'];
 
 
 const AcademyClassSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true }, // unique name like: class-7, class-9-10
     title: { type: String, required: true },
     version: { type: String, enum: academyVersionTypes, required: true, default: academyVersionTypes[0] },
     level: { type: String, enum: academyLevelTypes },
-    segment: { type: String, enum: segmentTypes },
+    segment: { type: String, enum: segmentTypes, required: true, default: null },
+
     groups: [{
         _id: false,
         type: String,
-        enum: academyGroupTypes
-    }]
+        enum: academyGroupTypes,
+        required: function () {
+            return this.segment === 'SSC' || this.segment === 'HSC';
+        }
+    }],
+
+    hasBatch: {
+        type: Boolean,
+        default: function () {
+            return this.segment === 'SSC' || this.segment === 'HSC';
+        }
+    }
 });
 
 const AcademySubjectSchema = new mongoose.Schema({
