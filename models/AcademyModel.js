@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const academyVersionTypes = ["BN", "EN"];
 const academyLevelTypes = ["PRIMARY", "SECONDARY", "HIGHER_SECONDARY"];
-const segmentTypes = ["JUNIOR", "SSC", "HSC", "ADMISSION", "JOB"];
-const academyGroupTypes = ['SCIENCE', 'ARTS', 'COMMERCE'];
+export const segmentTypes = ["JUNIOR", "SSC", "HSC", "ADMISSION", "JOB"];
+export const academyGroupTypes = ['SCIENCE', 'ARTS', 'COMMERCE'];
 
 // const AcademyLevelSchema = new mongoose.Schema({
 //     title: { type: String, required: true },
@@ -42,11 +42,14 @@ const AcademySubjectSchema = new mongoose.Schema({
     hasSubjectPaper: { type: Boolean, default: false },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", index: true },
     classId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyClass", index: true },
-    group: {
+    groups: [{
+        _id: false,
         type: String,
-        enum: ['all', 'science', 'arts', 'commerce'],
-        default: 'all'
-    },
+        enum: academyGroupTypes,
+        required: function () {
+            return this.segment === 'SSC' || this.segment === 'HSC';
+        }
+    }],
     segment: { type: String, enum: segmentTypes }
 }, { timestamps: true });
 

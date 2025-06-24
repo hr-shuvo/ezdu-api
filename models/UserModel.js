@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { segmentTypes, academyGroupTypes } from "./AcademyModel.js";
 
 
 const UserSchema = new mongoose.Schema({
@@ -34,7 +35,7 @@ const UserSchema = new mongoose.Schema({
     avatarPublicId: String,
 
     userType: {
-        category: { String, enum: ['class', 'ssc', 'hsc', 'admission', 'job'] },
+        category: { String, enum: segmentTypes },
         classId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "AcademyClass",
@@ -42,7 +43,7 @@ const UserSchema = new mongoose.Schema({
         },
         group: {
             type: String,
-            enum: ['science', 'arts', 'commerce'],
+            enum: academyGroupTypes,
             default: null // Only for ssc and hsc
         },
         jobTrack: {

@@ -108,6 +108,6 @@ export const validateUpdateUserInput = withValidationErrors([
         .optional()
         .isLength({ min: 4 })
         .withMessage('password must be at least 4 characters'),
-    body('lastName').notEmpty().withMessage('lastName is required').trim(),
-    body('location').notEmpty().withMessage('location is required').trim(),
+    // body('lastName').notEmpty().withMessage('lastName is required').trim(),
+    // body('location').notEmpty().withMessage('location is required').trim(),
 ]);
