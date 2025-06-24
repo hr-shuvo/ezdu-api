@@ -7,10 +7,13 @@ import { createJWT } from "../utils/tokenUtils.js";
 
 export const register = async (req, res) => {
     try {
+        const {username} = req.body;
+
         const isFirstAccount = (await User.countDocuments()) === 0;
         req.body.role = isFirstAccount ? 'admin' : 'user';
 
         req.body.password = await hashPassword(req.body.password);
+        req.body.username = username ?? req.body.email;        
 
         await User.create(req.body);
 
