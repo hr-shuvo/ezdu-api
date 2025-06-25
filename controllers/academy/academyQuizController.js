@@ -286,10 +286,7 @@ export const upsertAcademyQuizXp = async (req, res) => {
                 progress.lastWeekXp = progress.lastWeekXp.slice(0, 7);
             }
 
-
-
             // // // streak // // //
-
 
             const yesterday = new Date(Date.UTC(
                 today.getUTCFullYear(),
