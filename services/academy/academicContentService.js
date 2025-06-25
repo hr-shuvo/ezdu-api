@@ -16,7 +16,7 @@ export const _loadAcademicLessonContent = async (query, page, size) => {
             return {
                 ...rest,
                 lesson: lessonId,
-                lessonId: lessonId._id
+                lessonId: lessonId?._id
             }
         });
 
