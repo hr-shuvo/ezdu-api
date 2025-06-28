@@ -14,7 +14,6 @@ export const loadAcademyQuiz = async (req, res) => {
         }
 
         const allQuizzes = await AcademyQuiz.find({ userId }).sort({ createdAt: -1 });
-
         if (allQuizzes.length > 7) {
             const quizzesToDelete = allQuizzes.slice(7);
 
@@ -22,9 +21,16 @@ export const loadAcademyQuiz = async (req, res) => {
             await AcademyQuiz.deleteMany({ _id: { $in: deleteIds } });
         }
 
-        const latestQuizzes = await AcademyQuiz.find({ userId })
+        const _latestQuizzes = await AcademyQuiz.find({ userId }).lean()
+            .populate('subjectId')
             .sort({ createdAt: -1 })
             .limit(7);
+
+        const latestQuizzes = _latestQuizzes.map(q => ({
+            ...q,
+            subject: q.subjectId,
+            subjectId: q.subjectId._id
+        }));
 
         return res.status(200).json({ data: latestQuizzes, userId });
     }
