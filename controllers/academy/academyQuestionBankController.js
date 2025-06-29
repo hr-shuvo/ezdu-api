@@ -202,7 +202,7 @@ export const loadMcqsBySubjectAndInstitute = async (req, res) => {
 
 
 export const loadAcademicModelTest = async (req, res) => {
-    const { instituteId, subjectId } = req.query;
+    const { instituteId, subjectId, year } = req.query;
 
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;
@@ -215,11 +215,14 @@ export const loadAcademicModelTest = async (req, res) => {
     if (subjectId) {
         query.subjectId = subjectId;
     }
+    if (year) {
+        query.year = year;
+    }
 
     try {
         // const data = await Course.find();
         const { data, totalCount, totalPage, currentPage } = await _loadAcademicModelTest(query, page, size);
-
+        // console.log('model test: ', data)
         res.status(200).json({ data, totalCount, totalPage, currentPage });
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch model test", error: error.message });

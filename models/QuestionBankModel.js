@@ -20,9 +20,10 @@ const ModelTestSchema = new mongoose.Schema({
     subTitle: { type: String },
     description: { type: String },
     duration: { type: Number, default: 0 },
-    subjectIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" }],
-    mcqIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "AcademyMcq" }],
-    instituteId: { type: mongoose.Schema.Types.ObjectId, ref: "Institute", index: true },
+    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject" },
+    // mcqIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "AcademyMcq" }],
+    instituteId: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },
+    year: { type: Number },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 })
 
