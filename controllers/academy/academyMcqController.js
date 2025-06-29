@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 
 
 export const loadAcademyMcq = async (req, res) => {
-    const { subjectId, lessonId } = req.query;
+    const { subjectId, lessonId, instituteIds } = req.query;
 
     const query = {};
 
@@ -16,8 +16,12 @@ export const loadAcademyMcq = async (req, res) => {
         query.subjectId = subjectId;
     }
 
+    if(instituteIds && instituteIds.length > 0){
+        query['instituteIds.instituteId'] = { $in: instituteIds };        
+    }
+
     // console.log(subjectId);
-    // console.log(lessonId);
+    // console.log(instituteIds);
 
     const page = Number(req.query.pg) || 1;
     const size = Number(req.query.sz) || 10;

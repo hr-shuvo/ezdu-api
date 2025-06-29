@@ -103,7 +103,7 @@ const AcademyMcqSchema = new mongoose.Schema({
         year: { type: Number }
     }
     ],
-    modelTestIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "ModelTest" }],
+    // modelTestIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "ModelTest" }],
 })
 
 AcademyMcqSchema.index({ 'instituteIds.instituteId': 1, 'instituteIds.year': 1 })

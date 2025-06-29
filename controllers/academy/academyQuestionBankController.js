@@ -237,7 +237,20 @@ export const getAcademicModelTest = async (req, res) => {
             return res.status(400).json({ message: "Invalid model test id" });
         }
 
-        const result = await AcademyModelTest.findById(id);
+        const response = await AcademyModelTest.findById(id)
+        .populate('instituteId')
+        .populate('subjectId')
+        .lean()
+        ;
+
+        const result = {
+            ...response,
+            institute: response.instituteId,
+            instituteId: response.instituteId?._id,
+            subject: response.subjectId,
+            subjectId: response.subjectId?._id
+        }
+
 
         // console.log(response)
         if (!result) {
