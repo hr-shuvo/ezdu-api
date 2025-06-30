@@ -161,7 +161,7 @@ export const loadMcqsBySubjectAndInstitute = async (req, res) => {
         const formatted = mcqs.map(mcq => {
             const match = mcq.instituteIds.find(i =>
                 i.instituteId?.toString() === instituteId
-            );        
+            );
 
             return {
                 ...mcq,
@@ -173,7 +173,7 @@ export const loadMcqsBySubjectAndInstitute = async (req, res) => {
         });
 
         res.status(200).json({
-            totalCount:total,
+            totalCount: total,
             currentPage: parseInt(page),
             totalPage: Math.ceil(total / size),
             data: formatted
@@ -238,10 +238,10 @@ export const getAcademicModelTest = async (req, res) => {
         }
 
         const response = await AcademyModelTest.findById(id)
-        .populate('instituteId')
-        .populate('subjectId')
-        .lean()
-        ;
+            .populate('instituteId')
+            .populate('subjectId')
+            .lean()
+            ;
 
         const result = {
             ...response,
@@ -318,7 +318,16 @@ export const _loadAcademicModelTest = async (query, page, size) => {
     try {
         const skip = (page - 1) * size;
 
-        const result = await AcademyModelTest.find(query).skip(skip).limit(size);
+        const response = await AcademyModelTest.find(query)
+            .populate('subjectId')
+            .sort({subjectId: 1, year:-1})
+            .skip(skip).limit(size).lean();
+
+        const result = response.map(item => ({
+            ...item,
+            subject: item.subjectId,
+            subjectId: item.subjectId?._id || null
+        }));
 
         const totalCount = await AcademyModelTest.countDocuments(query);
         const totalPage = Math.ceil(totalCount / size);

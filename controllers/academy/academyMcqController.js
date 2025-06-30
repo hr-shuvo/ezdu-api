@@ -1,11 +1,10 @@
 import { AcademyMcq } from "../../models/AcademyModel.js";
-import { processImageBuffer } from "../../utils/imageHelper.js";
 import cloudinary from "cloudinary";
 import { promises as fs } from 'fs';
 
 
 export const loadAcademyMcq = async (req, res) => {
-    const { subjectId, lessonId, instituteIds } = req.query;
+    const { subjectId, lessonId, instituteIds, year } = req.query;
 
     const query = {};
 
@@ -20,7 +19,11 @@ export const loadAcademyMcq = async (req, res) => {
         query['instituteIds.instituteId'] = { $in: instituteIds };        
     }
 
-    // console.log(subjectId);
+    if(year){
+        query['instituteIds.year'] = year;
+    }
+
+    // console.log("Testing year-only query:", JSON.stringify(query, null, 2));
     // console.log(instituteIds);
 
     const page = Number(req.query.pg) || 1;
@@ -63,6 +66,8 @@ export const upsertAcademyMcq = async (req, res) => {
         mcq.optionList = JSON.parse(mcq.optionList);
         if(mcq.instituteIds && mcq.instituteIds.length > 0)
         mcq.instituteIds = JSON.parse(mcq.instituteIds);
+
+        console.log(mcq)
 
 
         const oldMcq = await AcademyMcq.findById(mcq._id);

@@ -79,7 +79,7 @@ const AcademyLessonContentSchema = new mongoose.Schema({
 
 const AcademyMcqSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademySubject", required: true },
-    lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson", required: true },
+    lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademyLesson" },
     passage: { type: String },
     imageUrl: { type: String },
     imagePublicId: { type: String },
