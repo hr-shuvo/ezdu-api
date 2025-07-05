@@ -12,7 +12,9 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: [true, 'Please add a email'],
+        unique: true,
+        trim: true,
     },
     password: {
         type: String,
@@ -33,6 +35,11 @@ const UserSchema = new mongoose.Schema({
     },
     avatar: String,
     avatarPublicId: String,
+
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
 
     userType: {
         type: Object,
@@ -66,11 +73,46 @@ UserSchema.methods.toJSON = function () {
     return user;
 }
 
-export default mongoose.model('User', UserSchema);
+
+const TokenSchema = new mongoose.Schema({
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User'
+        },
+        vToken: { // verify token
+            type: String,
+            default:''
+        },
+        rToken: { // reset token
+            type: String,
+            default:''
+        },
+        lToken: { // login token
+            type: String,
+            default:''
+        },
+        createdAt: {
+            type: Date,
+            required:true
+        },
+        expiresAt: {
+            type: Date,
+            required:true
+        },
+
+    }
+);
+
+const User = mongoose.model('User', UserSchema);
+const Token = mongoose.model('Token', TokenSchema);
 
 
+export {
+    User,
+    Token
 
-
+}
 
 
 

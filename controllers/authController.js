@@ -1,8 +1,14 @@
-import User from '../models/UserModel.js';
+import { Token, User } from '../models/UserModel.js';
 import { StatusCodes } from "http-status-codes";
 import { comparePassword, hashPassword } from "../utils/passwordUtils.js";
-import { UnAuthenticateError } from "../errors/customError.js";
+import { NotFoundError, UnAuthenticateError } from "../errors/customError.js";
 import { createJWT } from "../utils/tokenUtils.js";
+import 'dotenv/config';
+
+import Cryptr from 'cryptr';
+import { sendVerificationCodeEmail } from "../utils/emailUtils.js";
+
+const cryptr = new Cryptr(process.env.CRYPTR_KEY);
 
 
 export const register = async (req, res) => {
@@ -13,12 +19,12 @@ export const register = async (req, res) => {
         req.body.role = isFirstAccount ? 'admin' : 'user';
 
         req.body.password = await hashPassword(req.body.password);
-        req.body.username = username ?? req.body.email;        
+        req.body.username = username ?? req.body.email;
 
         await User.create(req.body);
 
         return res.status(StatusCodes.CREATED).json({message: 'Registration complete'});
-    } catch(error) {
+    } catch (error) {
         return res.status(500).json({message: error.message});
     }
 };
@@ -27,12 +33,12 @@ export const login = async (req, res) => {
     const {email, password} = req.body;
 
     const user = await User.findOne({email});
-    if(!user) {
+    if (!user) {
         throw new UnAuthenticateError('Invalid credentials!');
     }
 
     const isMatch = await comparePassword(password, user.password);
-    if(!isMatch) {
+    if (!isMatch) {
         throw new UnAuthenticateError('Invalid credentials!');
     }
 
@@ -48,10 +54,10 @@ export const login = async (req, res) => {
     res.cookie('token', token, {
         path: '/',
         httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        expires: new Date(Date.now() + 1000 * 86400 * 7), // 7 day
         sameSite: 'none',
         secure: true,
-        ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
+        ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
     })
 
     return res.status(StatusCodes.OK).json({message: 'User logged in'});
@@ -65,7 +71,7 @@ export const logout = async (req, res) => {
         maxAge: 0,
         sameSite: 'none',
         secure: true,
-        ...(process.env.NODE_ENV === 'production' && { domain: '.ezduonline.com' })
+        ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
     });
 
     // res.clearCookie('token', 'logout', {
@@ -78,4 +84,61 @@ export const logout = async (req, res) => {
     // });
 
     return res.status(StatusCodes.OK).json({message: 'User logged out'});
+};
+
+
+// Region - Email
+
+export const sendVerificationCode = async (req, res) => {
+    const {email} = req.params;
+
+    const user = await User.findOne({email});
+    if (!user) {
+        res.status(404)
+        throw new NotFoundError('User not found');
+    }
+
+    console.log(user)
+    let userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
+    if (!userToken) {
+        await Token.deleteMany({ userId: user._id });
+
+        const loginCode = Math.floor(100000 + Math.random() * 900000);
+        const encryptedLoginCode = cryptr.encrypt(loginCode.toString())
+        console.log(loginCode)
+
+        userToken = await new Token({
+            userId: user._id,
+            lToken: encryptedLoginCode,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 10 * (60 * 1000) // 10 minutes
+        }).save();
+    }
+
+    const loginCode = userToken.lToken;
+    const decryptedLoginCode = cryptr.decrypt(loginCode)
+
+    const emailData = {
+        subject: `Login code - ${process.env.ORG_NAME}`,
+        sendTo: email,
+        sendFrom: process.env.SMTP_EMAIL_USER,
+        replyTo: process.env.SMTP_EMAIL_NOREPLY,
+        template: 'loginCode',
+        name: user.name,
+        verificationCode: decryptedLoginCode,
+        logoUrl: process.env.SMTP_LOGO_URL,
+    };
+
+    try {
+        await sendVerificationCodeEmail(emailData);
+
+        return res.status(StatusCodes.OK).json({message: `Verification code sent to ${email}`});
+    } catch (error) {
+        res.status(500)
+        // console.log(error)
+        throw new Error('Email not sent, please try again');
+    }
+
+
 }
+

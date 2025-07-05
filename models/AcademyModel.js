@@ -122,6 +122,8 @@ const AcademyQuizSchema = new mongoose.Schema({
     xp: { type: Number, default: 0 }
 }, { timestamps: true })
 
+// similer as user progress
+// but for academy progress
 const AcademyProgressSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     userName: { type: String, required: true, default: "User" },

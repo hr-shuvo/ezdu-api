@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { AcademyProgress } from "../../models/AcademyModel.js";
-import User from "../../models/UserModel.js"
+import { User } from "../../models/UserModel.js"
 
 export const getAcademyProgress = async (req, res) => {
     try {

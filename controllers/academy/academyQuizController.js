@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { AcademyQuiz, AcademyMcq, AcademyProgress } from "../../models/AcademyModel.js";
-import User from "../../models/UserModel.js"
+import { User } from "../../models/UserModel.js"
 
 
 
