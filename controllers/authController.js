@@ -1,7 +1,7 @@
 import { Token, User } from '../models/UserModel.js';
 import { StatusCodes } from "http-status-codes";
 import { comparePassword, hashPassword } from "../utils/passwordUtils.js";
-import { NotFoundError, UnAuthenticateError } from "../errors/customError.js";
+import { BadRequestError, NotFoundError, UnAuthenticateError } from "../errors/customError.js";
 import { createJWT } from "../utils/tokenUtils.js";
 import 'dotenv/config';
 
@@ -101,7 +101,7 @@ export const sendVerificationCode = async (req, res) => {
     console.log(user)
     let userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
     if (!userToken) {
-        await Token.deleteMany({ userId: user._id });
+        await Token.deleteMany({userId: user._id});
 
         const loginCode = Math.floor(100000 + Math.random() * 900000);
         const encryptedLoginCode = cryptr.encrypt(loginCode.toString())
@@ -142,3 +142,44 @@ export const sendVerificationCode = async (req, res) => {
 
 }
 
+
+export const verificationByCode = async (req, res) => {
+    const {email} = req.params;
+    const {code} = req.body;
+
+    const user = await User.findOne({email});
+    if (!user) {
+        res.status(404)
+        throw new NotFoundError('User not found');
+    }
+
+    const userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
+    if (!userToken) {
+        res.status(404)
+        throw new BadRequestError('Invalid or Expire token, please send code again');
+    }
+
+    const decryptedLoginCode = cryptr.decrypt(userToken.lToken);
+
+    if (code !== decryptedLoginCode) {
+        res.status(404)
+        throw new BadRequestError('Incorrect login code, please try again');
+    }else{
+        user.isVerified = true
+        await user.save()
+
+        const token = createJWT({userId: user._id, role: user.role});
+
+        res.cookie('token', token, {
+            path: '/',
+            httpOnly: true,
+            expires: new Date(Date.now() + 1000 * 86400 * 7), // 7 day
+            sameSite: 'none',
+            secure: true,
+            ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
+        })
+
+        return res.status(StatusCodes.OK).json({message: 'Verification success'});
+    }
+
+}
