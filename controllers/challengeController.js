@@ -10,10 +10,10 @@ export const loadChallenges = async (req, res) => {
     if(lessonId){
         query.lessonId = lessonId;
     }
-    if(isActive == true){
+    if(isActive === true){
         query.status = 1;
     }
-    if(isActive == false){
+    if(isActive === false){
         query.status = 0;
     }
 
