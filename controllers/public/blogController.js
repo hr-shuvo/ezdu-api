@@ -2,6 +2,8 @@
 import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { BlogPost } from "../../models/BlogModel.js";
+import cloudinary from "cloudinary";
+import { promises as fs } from "fs";
 
 export const loadBlogPost = async (req, res) => {
     const {type} = req.query;
@@ -55,17 +57,48 @@ export const getBlogPost = async (req, res) => {
 export const upsertBlogPost = async (req, res) => {
     const blogPost = req.body;
 
+    const existing = await BlogPost.findOne({ slug: blogPost.slug });
+    const oldCoverImagePublicId = existing?.coverImagePublicId;
+
+
+    return res.status(StatusCodes.OK).json(blogPost);
+
+    if (req.file) {
+
+        try {
+            const response = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: "ezdu/blog",
+                    transformation: [
+                        { width: 600, crop: 'scale' },
+                        { quality: 'auto:low' },
+                        { fetch_format: 'auto' }
+                    ],
+                    format: 'jpg',
+                    resource_type: 'image'
+                },
+            );
+            await fs.unlink(req.file.path);
+
+            blogPost.coverImageUrl = response.secure_url;
+            blogPost.coverImagePublicId = response.public_id;
+
+            if (oldCoverImagePublicId) {
+                await cloudinary.v2.uploader.destroy(oldCoverImagePublicId);
+            }
+        } catch (err) {
+            return res.status(400).json({ error: err.message });
+        }
+    }
+
     if (blogPost._id) {
-        // Check for unique slug on update (exclude current post)
-        const existing = await BlogPost.findOne({ slug: blogPost.slug, _id: { $ne: blogPost._id } });
-        if (existing) {
+
+        if (existing && existing._id.toString() !== blogPost._id) {
             return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
         }
         await BlogPost.findByIdAndUpdate(blogPost._id, blogPost);
         res.status(StatusCodes.OK).json('update success');
     } else {
-        // Check for unique slug on create
-        const existing = await BlogPost.findOne({ slug: blogPost.slug });
+
         if (existing) {
             return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
         }

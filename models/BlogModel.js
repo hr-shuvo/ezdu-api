@@ -32,9 +32,9 @@ const BlogPostSchema = new mongoose.Schema({
     metaDescription: {
         type: String,
     },
-    coverImage: {
-        type: String, // URL to the cover/featured image
-    },
+    coverImageUrl: { type: String },
+    coverImagePublicId: { type: String },
+
     tags: [{
         type: String,
     }],
