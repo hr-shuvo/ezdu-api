@@ -6,6 +6,9 @@ const BlogPostSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    subTitle: {
+        type: String,
+    },
     slug: {
         type: String,
         unique: true,
@@ -26,14 +29,14 @@ const BlogPostSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['regular', 'featured', 'highlight', 'popular'],
-        default: 'regular',
+        enum: ['REGULAR', 'FEATURED', 'HIGHLIGHT', 'POPULAR'],
+        default: 'REGULAR',
     },
     metaDescription: {
         type: String,
     },
-    coverImageUrl: { type: String },
-    coverImagePublicId: { type: String },
+    coverImageUrl: {type: String},
+    coverImagePublicId: {type: String},
 
     tags: [{
         type: String,

@@ -57,65 +57,72 @@ export const getBlogPost = async (req, res) => {
 export const upsertBlogPost = async (req, res) => {
     const blogPost = req.body;
 
-    const existing = await BlogPost.findOne({
-        $or: [
-            { _id: blogPost._id },
-            { slug: blogPost.slug }
-        ]
-    });
-    const oldCoverImagePublicId = existing?.coverImagePublicId;
-    // return res.status(StatusCodes.OK).json(blogPost);
+    try{
+        const existing = await BlogPost.findOne({
+            $or: [
+                { _id: blogPost._id },
+                { slug: blogPost.slug }
+            ]
+        });
+        const oldCoverImagePublicId = existing?.coverImagePublicId;
+        // return res.status(StatusCodes.OK).json(blogPost);
 
-    if (blogPost._id) {
-        // Update case
-        if (!existing) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: "Blog post not found" });
-        }
-
-        if (existing._id.toString() !== blogPost._id) {
-            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
-        }
-    } else {
-        // Create case
-        if (existing) {
-            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
-        }
-    }
-
-    if (req.file) {
-        try {
-            const response = await cloudinary.v2.uploader.upload(req.file.path, {
-                    folder: "ezdu/blog",
-                    transformation: [
-                        { width: 600, crop: 'scale' },
-                        { quality: 'auto:low' },
-                        { fetch_format: 'auto' }
-                    ],
-                    // format: 'jpg',
-                    resource_type: 'image'
-                },
-            );
-            await fs.unlink(req.file.path);
-
-            blogPost.coverImageUrl = response.secure_url;
-            blogPost.coverImagePublicId = response.public_id;
-
-            if (oldCoverImagePublicId) {
-                await cloudinary.v2.uploader.destroy(oldCoverImagePublicId);
+        if (blogPost._id) {
+            // Update case
+            if (!existing) {
+                return res.status(StatusCodes.NOT_FOUND).json({ message: "Blog post not found" });
             }
-        } catch (err) {
-            return res.status(400).json({ error: err.message });
+
+            if (existing._id.toString() !== blogPost._id) {
+                return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
+            }
+        } else {
+            // Create case
+            if (existing) {
+                return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
+            }
+        }
+
+        if (req.file) {
+            try {
+                const response = await cloudinary.v2.uploader.upload(req.file.path, {
+                        folder: "ezdu/blog",
+                        transformation: [
+                            { width: 600, crop: 'scale' },
+                            { quality: 'auto:low' },
+                            { fetch_format: 'auto' }
+                        ],
+                        // format: 'jpg',
+                        resource_type: 'image'
+                    },
+                );
+                await fs.unlink(req.file.path);
+
+                blogPost.coverImageUrl = response.secure_url;
+                blogPost.coverImagePublicId = response.public_id;
+
+                if (oldCoverImagePublicId) {
+                    await cloudinary.v2.uploader.destroy(oldCoverImagePublicId);
+                }
+            } catch (err) {
+                return res.status(400).json({ error: err.message });
+            }
+        }
+
+        if (blogPost._id) {
+            await BlogPost.findByIdAndUpdate(blogPost._id, blogPost);
+
+            res.status(StatusCodes.OK).json('update success');
+        } else {
+            await BlogPost.create(blogPost);
+            res.status(StatusCodes.CREATED).json('create success');
         }
     }
-
-    if (blogPost._id) {
-         await BlogPost.findByIdAndUpdate(blogPost._id, blogPost);
-
-        res.status(StatusCodes.OK).json('update success');
-    } else {
-        await BlogPost.create(blogPost);
-        res.status(StatusCodes.CREATED).json('create success');
+    catch (error) {
+        await removeImageFromCloudinary(blogPost.coverImagePublicId);
+        return res.status(500).json({ message: "Failed to process request", error: error.message });
     }
+
 };
 
 
