@@ -57,14 +57,32 @@ export const getBlogPost = async (req, res) => {
 export const upsertBlogPost = async (req, res) => {
     const blogPost = req.body;
 
-    const existing = await BlogPost.findOne({ slug: blogPost.slug });
+    const existing = await BlogPost.findOne({
+        $or: [
+            { _id: blogPost._id },
+            { slug: blogPost.slug }
+        ]
+    });
     const oldCoverImagePublicId = existing?.coverImagePublicId;
+    // return res.status(StatusCodes.OK).json(blogPost);
 
+    if (blogPost._id) {
+        // Update case
+        if (!existing) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Blog post not found" });
+        }
 
-    return res.status(StatusCodes.OK).json(blogPost);
+        if (existing._id.toString() !== blogPost._id) {
+            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
+        }
+    } else {
+        // Create case
+        if (existing) {
+            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
+        }
+    }
 
     if (req.file) {
-
         try {
             const response = await cloudinary.v2.uploader.upload(req.file.path, {
                     folder: "ezdu/blog",
@@ -73,7 +91,7 @@ export const upsertBlogPost = async (req, res) => {
                         { quality: 'auto:low' },
                         { fetch_format: 'auto' }
                     ],
-                    format: 'jpg',
+                    // format: 'jpg',
                     resource_type: 'image'
                 },
             );
@@ -91,17 +109,10 @@ export const upsertBlogPost = async (req, res) => {
     }
 
     if (blogPost._id) {
+         await BlogPost.findByIdAndUpdate(blogPost._id, blogPost);
 
-        if (existing && existing._id.toString() !== blogPost._id) {
-            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
-        }
-        await BlogPost.findByIdAndUpdate(blogPost._id, blogPost);
         res.status(StatusCodes.OK).json('update success');
     } else {
-
-        if (existing) {
-            return res.status(StatusCodes.CONFLICT).json({ message: "Slug already exists" });
-        }
         await BlogPost.create(blogPost);
         res.status(StatusCodes.CREATED).json('create success');
     }
@@ -122,6 +133,15 @@ export const upsertBlogPost = async (req, res) => {
 
 
 
+const removeImageFromCloudinary = async (publicId) => {
+    if (!publicId) return;
+
+    try {
+        await cloudinary.v2.uploader.destroy(publicId);
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
 
 
 
