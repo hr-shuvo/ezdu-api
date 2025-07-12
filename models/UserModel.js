@@ -36,10 +36,8 @@ const UserSchema = new mongoose.Schema({
     avatar: String,
     avatarPublicId: String,
 
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
+    isVerified: {type: Boolean, default: false},
+    hasNotification: {type: Boolean, default: false},
 
     userType: {
         type: Object,
@@ -48,16 +46,27 @@ const UserSchema = new mongoose.Schema({
             validator: function (value) {
                 if (value === null) return true;
 
-                const validCategories = ['ssc', 'hsc', 'job'];
+                const validCategories = ['SSC', 'HSC', 'JOB'];
                 const validGroups = ['SCIENCE', 'ARTS', 'COMMERCE'];
-                const validJobTracks = ['bcs', 'bank', 'govt', 'general'];
+                const validJobTracks = ['BCS', 'BANK', 'GOVT', 'GENERAL'];
 
                 if (typeof value !== 'object') return false;
 
                 // Basic structure validation
-                if ('category' in value && !validCategories.includes(value.category)) return false;
-                if ('group' in value && value.group !== null && !validGroups.includes(value.group)) return false;
-                if ('jobTrack' in value && value.jobTrack !== null && !validJobTracks.includes(value.jobTrack)) return false;
+                if ('category' in value &&
+                    value.category !== null &&
+                    value.category !== '' &&
+                    !validCategories.includes(value.category)) return false;
+
+                if ('group' in value &&
+                    value.group !== null &&
+                    value.group !== '' &&
+                    !validGroups.includes(value.group)) return false;
+
+                if ('jobTrack' in value &&
+                    value.jobTrack !== null &&
+                    value.jobTrack !== '' &&
+                    !validJobTracks.includes(value.jobTrack)) return false;
 
                 return true;
             },
@@ -65,13 +74,39 @@ const UserSchema = new mongoose.Schema({
         }
     }
 
-}, { timestamps: true });
+}, {timestamps: true});
 
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;
     return user;
 }
+
+const NotificationSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    // title: {
+    //     type: String,
+    //     required: true
+    // },
+    message: {
+        type: String,
+        required: true
+    },
+    isRead: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+}, {timestamps: true});
+
 
 
 const TokenSchema = new mongoose.Schema({
@@ -82,39 +117,41 @@ const TokenSchema = new mongoose.Schema({
         },
         vToken: { // verify token
             type: String,
-            default:''
+            default: ''
         },
         rToken: { // reset token
             type: String,
-            default:''
+            default: ''
         },
         lToken: { // login token
             type: String,
-            default:''
+            default: ''
         },
         createdAt: {
             type: Date,
-            required:true
+            required: true
         },
         expiresAt: {
             type: Date,
-            required:true
+            required: true
         },
 
     }
 );
 
+
 const User = mongoose.model('User', UserSchema);
 const Token = mongoose.model('Token', TokenSchema);
+
+const Notification = mongoose.model('Notification', NotificationSchema);
 
 
 export {
     User,
-    Token
+    Token,
+    Notification
 
 }
-
-
 
 
 // userType: {

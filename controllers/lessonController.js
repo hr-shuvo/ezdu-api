@@ -9,10 +9,10 @@ export const loadLessons = async (req, res) => {
     if(unitId){
         query.unitId = unitId;
     }
-    if(isActive == true){
+    if(isActive === true){
         query.status = 1;
     }
-    if(isActive == false){
+    if(isActive === false){
         query.status = 0;
     }
 
@@ -24,7 +24,7 @@ export const loadLessons = async (req, res) => {
 
         res.status(200).json({data, totalCount, totalPage, currentPage});
     } catch (error) {
-        res.status(500).json({ message: "Failed to fetch modues", error: error.message });
+        res.status(500).json({ message: "Failed to fetch lesson", error: error.message });
     }
 }
 

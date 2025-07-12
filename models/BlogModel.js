@@ -43,10 +43,59 @@ const BlogPostSchema = new mongoose.Schema({
     }],
 }, {timestamps: true});
 
+const DiscussionPostSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    imageUrl: {
+        type: String,
+    },
+    imagePublicId: {
+        type: String,
+    },
+}, {timestamps: true});
+
+const DiscussionCommentSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    discussionPostId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DiscussionPost',
+        required: true,
+    },
+}, {timestamps: true});
+
+
+
+
 
 const BlogPost = mongoose.model("BlogPost", BlogPostSchema);
+const DiscussionPost = mongoose.model("DiscussionPost", DiscussionPostSchema);
+const DiscussionComment = mongoose.model("DiscussionComment", DiscussionCommentSchema);
+
+
+
+
+
+
+
 
 
 export {
     BlogPost,
+    DiscussionPost,
+    DiscussionComment
 }

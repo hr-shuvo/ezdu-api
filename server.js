@@ -25,6 +25,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import cloudinary from "cloudinary";
 import blogRouter from "./routes/public/blogRouter.js";
+import discussionRouter from "./routes/discussionRouter.js";
 
 
 
@@ -98,9 +99,11 @@ app.use('/api/v1/challengeProgress', authenticateUser, challengeProgressRouter);
 app.use('/api/v1/academy', academyRouter);
 app.use('/api/v1/admission', admissionRoute);
 
+
 app.use('/api/v1/leaderboard', optionalAuth, getAcademyLeaderboard);
 
 app.use('/api/v1/blog', blogRouter);
+app.use('/api/v1/discussion', discussionRouter);
 
 
 app.use('*', (req, res) => {

@@ -7,23 +7,36 @@ import 'dotenv/config';
 
 import Cryptr from 'cryptr';
 import { sendVerificationCodeEmail } from "../utils/emailUtils.js";
+import { nanoid } from "nanoid";
 
 const cryptr = new Cryptr(process.env.CRYPTR_KEY);
 
 
 export const register = async (req, res) => {
     try {
-        const {username} = req.body;
+        const {username, email} = req.body;
 
         const isFirstAccount = (await User.countDocuments()) === 0;
         req.body.role = isFirstAccount ? 'admin' : 'user';
 
         req.body.password = await hashPassword(req.body.password);
-        req.body.username = username ?? req.body.email;
+        // req.body.username = username ?? req.body.email;
+
+        // set default username if not provided
+        if (!username) {
+            const prefix = email.split("@")[0]
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, "");
+
+            req.body.username = `${prefix}_${nanoid(6)}`;
+        }
 
         await User.create(req.body);
 
-        return res.status(StatusCodes.CREATED).json({message: 'Registration complete'});
+        await _sendVerificationEmail(req.body.email);
+
+        return res.status(StatusCodes.OK).json({message: `Verification code sent to ${email}`});
+
     } catch (error) {
         return res.status(500).json({message: error.message});
     }
@@ -98,12 +111,12 @@ export const sendVerificationCode = async (req, res) => {
         throw new NotFoundError('User not found');
     }
 
-    console.log(user)
+    // console.log(user)
     let userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
     if (!userToken) {
         await Token.deleteMany({userId: user._id});
 
-        const loginCode = Math.floor(100000 + Math.random() * 900000);
+        const loginCode = Math.floor(1000 + Math.random() * 9000);
         const encryptedLoginCode = cryptr.encrypt(loginCode.toString())
         console.log(loginCode)
 
@@ -119,7 +132,7 @@ export const sendVerificationCode = async (req, res) => {
     const decryptedLoginCode = cryptr.decrypt(loginCode)
 
     const emailData = {
-        subject: `Login code - ${process.env.ORG_NAME}`,
+        subject: `Verification code - ${process.env.ORG_NAME}`,
         sendTo: email,
         sendFrom: process.env.SMTP_EMAIL_USER,
         replyTo: process.env.SMTP_EMAIL_NOREPLY,
@@ -153,6 +166,10 @@ export const verificationByCode = async (req, res) => {
         throw new NotFoundError('User not found');
     }
 
+    if (user.isVerified) {
+        return res.status(StatusCodes.OK).json({message: 'User already verified'});
+    }
+
     const userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
     if (!userToken) {
         res.status(404)
@@ -163,7 +180,7 @@ export const verificationByCode = async (req, res) => {
 
     if (code !== decryptedLoginCode) {
         res.status(404)
-        throw new BadRequestError('Incorrect login code, please try again');
+        throw new BadRequestError('Incorrect code, please try again');
     }else{
         user.isVerified = true
         await user.save()
@@ -181,5 +198,57 @@ export const verificationByCode = async (req, res) => {
 
         return res.status(StatusCodes.OK).json({message: 'Verification success'});
     }
+
+}
+
+
+
+// End Region - Email
+
+const _sendVerificationEmail = async(email)=>{
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new NotFoundError('User not found');
+    }
+
+    let userToken = await Token.findOne({userId: user._id, expiresAt: {$gt: Date.now()}})
+    if (!userToken) {
+        await Token.deleteMany({userId: user._id});
+
+        const loginCode = Math.floor(1000 + Math.random() * 9000);
+        const encryptedLoginCode = cryptr.encrypt(loginCode.toString())
+        console.log(loginCode)
+
+        userToken = await new Token({
+            userId: user._id,
+            lToken: encryptedLoginCode,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 10 * (60 * 1000) // 10 minutes
+        }).save();
+    }
+
+    const loginCode = userToken.lToken;
+    const decryptedLoginCode = cryptr.decrypt(loginCode)
+
+    const emailData = {
+        subject: `Verification code - ${process.env.ORG_NAME}`,
+        sendTo: email,
+        sendFrom: process.env.SMTP_EMAIL_USER,
+        replyTo: process.env.SMTP_EMAIL_NOREPLY,
+        template: 'loginCode',
+        name: user.name,
+        verificationCode: decryptedLoginCode,
+        logoUrl: process.env.SMTP_LOGO_URL,
+    };
+
+    try {
+        await sendVerificationCodeEmail(emailData);
+
+    } catch (error) {
+        // return res.status(500)
+        console.log(error)
+        throw new Error('Email not sent, please try again');
+    }
+
 
 }
