@@ -28,7 +28,7 @@ export const register = async (req, res) => {
                 .toLowerCase()
                 .replace(/[^a-z0-9]/g, "");
 
-            req.body.username = `${prefix}_${nanoid(6)}`;
+            req.body.username = `${prefix}${nanoid(6)}`;
         }
 
         await User.create(req.body);
