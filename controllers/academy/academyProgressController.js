@@ -4,7 +4,7 @@ import { User } from "../../models/UserModel.js"
 
 export const getAcademyProgress = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.query.userId ?? req.user.userId;
         console.log(userId);
 
         if (!userId) {
@@ -46,7 +46,7 @@ export const getAcademyProgress = async (req, res) => {
                 userName: user?.name,
                 userId,
                 lastWeekXp: [{ day: today, xp: 0 }],
-                streak: 1,
+                streak: 0,
                 lastStreakDay: today,
             });
             // await progress.save();
@@ -75,6 +75,7 @@ export const getAcademyLeaderboard = async (req, res) => {
                 name: p.userName,
                 totalXp: p.totalXp,
                 rank: i + 1,
+                avatar: p.userImageSrc,
                 isCurrentUser: p.userId.toString() === userId
             }));
 

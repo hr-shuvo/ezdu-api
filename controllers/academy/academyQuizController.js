@@ -3,27 +3,25 @@ import { AcademyQuiz, AcademyMcq, AcademyProgress } from "../../models/AcademyMo
 import { User } from "../../models/UserModel.js"
 
 
-
-
 export const loadAcademyQuiz = async (req, res) => {
     try {
         const userId = req.user.userId;
 
         if (!userId) {
-            return res.status(401).json({ message: "Invalid User", error: error.message });
+            return res.status(401).json({message: "Invalid User", error: error.message});
         }
 
-        const allQuizzes = await AcademyQuiz.find({ userId }).sort({ createdAt: -1 });
+        const allQuizzes = await AcademyQuiz.find({userId}).sort({createdAt: -1});
         if (allQuizzes.length > 7) {
             const quizzesToDelete = allQuizzes.slice(7);
 
             const deleteIds = quizzesToDelete.map(q => q._id);
-            await AcademyQuiz.deleteMany({ _id: { $in: deleteIds } });
+            await AcademyQuiz.deleteMany({_id: {$in: deleteIds}});
         }
 
-        const _latestQuizzes = await AcademyQuiz.find({ userId }).lean()
+        const _latestQuizzes = await AcademyQuiz.find({userId}).lean()
             .populate('subjectId')
-            .sort({ createdAt: -1 })
+            .sort({createdAt: -1})
             .limit(7);
 
         const latestQuizzes = _latestQuizzes.map(q => ({
@@ -32,10 +30,9 @@ export const loadAcademyQuiz = async (req, res) => {
             subjectId: q.subjectId._id
         }));
 
-        return res.status(200).json({ data: latestQuizzes, userId });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+        return res.status(200).json({data: latestQuizzes, userId});
+    } catch (error) {
+        res.status(500).json({message: "Failed to fetch challenge", error: error.message});
     }
 }
 
@@ -44,56 +41,56 @@ export const getAcademyOngoingQuiz = async (req, res) => {
         const userId = req.user?.userId;
 
         if (!userId) {
-            return res.status(401).json({ message: "Unauthorized user" });
+            return res.status(401).json({message: "Unauthorized user"});
         }
 
         const now = new Date();
 
         const ongoingQuiz = await AcademyQuiz.findOne({
             userId,
-            start: { $lte: now },
-            end: { $gte: now }
+            start: {$lte: now},
+            end: {$gte: now}
         });
 
         if (!ongoingQuiz) {
-            return res.status(200).json({ data: null, message: "No active quiz in progress" });
+            return res.status(200).json({data: null, message: "No active quiz in progress"});
         }
 
-        return res.status(200).json({ data: ongoingQuiz });
+        return res.status(200).json({data: ongoingQuiz});
 
     } catch (error) {
         console.error("Error getting ongoing quiz:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({message: "Internal server error"});
     }
 };
 
 
 export const upsertQuiz = async (req, res) => {
     try {
-        const { _id, subjectId, duration, lessonIds, questions, end } = req.body;
+        const {_id, subjectId, duration, lessonIds, questions, end} = req.body;
         const userId = req.user.userId;
 
         if (!userId) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({message: "Unauthorized"});
         }
 
         const ongoingQuiz = await AcademyQuiz.findOne({
             userId,
-            end: { $gt: new Date() }
+            end: {$gt: new Date()}
         });
 
         if (ongoingQuiz && ongoingQuiz._id.toString() !== _id) {
-            return res.status(400).json({ message: "You already have an active quiz in progress." });
+            return res.status(400).json({message: "You already have an active quiz in progress."});
         }
 
         if (_id) {
             const updated = await AcademyQuiz.findOneAndUpdate(
-                { _id, userId },
-                { $set: { questions, end } },
-                { new: true }
+                {_id, userId},
+                {$set: {questions, end}},
+                {new: true}
             );
 
-            return res.status(200).json({ message: "Quiz updated", data: updated });
+            return res.status(200).json({message: "Quiz updated", data: updated});
         }
 
         const now = new Date();
@@ -110,10 +107,9 @@ export const upsertQuiz = async (req, res) => {
 
         const newQuiz = await AcademyQuiz.create(model);
 
-        return res.status(201).json({ message: "Quiz created", quiz: newQuiz });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+        return res.status(201).json({message: "Quiz created", quiz: newQuiz});
+    } catch (error) {
+        res.status(500).json({message: "Failed to fetch challenge", error: error.message});
     }
 }
 
@@ -122,13 +118,13 @@ export const loadOrCreateQuiz = async (req, res) => {
     try {
         const userId = req.user?.userId;
         if (!userId) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({message: "Unauthorized"});
         }
 
-        const { lessonIds, subjectId, duration } = req.body;
+        const {lessonIds, subjectId, duration} = req.body;
 
         if (!lessonIds || !Array.isArray(lessonIds) || !duration) {
-            return res.status(400).json({ message: "Missing lessonIds or duration" });
+            return res.status(400).json({message: "Missing lessonIds or duration"});
         }
 
         const now = new Date();
@@ -136,18 +132,18 @@ export const loadOrCreateQuiz = async (req, res) => {
         // 1. Check if there's an ongoing quiz
         const ongoingQuiz = await AcademyQuiz.findOne({
             userId,
-            start: { $lte: now },
-            end: { $gte: now }
+            start: {$lte: now},
+            end: {$gte: now}
         });
 
         if (ongoingQuiz) {
-            return res.status(200).json({ data: ongoingQuiz });
+            return res.status(200).json({data: ongoingQuiz});
         }
 
         // 2. No ongoing quiz: Fetch MCQs
         const mcqs = await AcademyMcq.aggregate([
-            { $match: { lessonId: { $in: lessonIds.map(id => new mongoose.Types.ObjectId(id)) } } },
-            { $sample: { size: duration } }
+            {$match: {lessonId: {$in: lessonIds.map(id => new mongoose.Types.ObjectId(id))}}},
+            {$sample: {size: duration}}
         ]);
 
         // 3. Simplify questions & add selectedOption
@@ -175,11 +171,11 @@ export const loadOrCreateQuiz = async (req, res) => {
             questions
         });
 
-        return res.status(201).json({ data: newQuiz });
+        return res.status(201).json({data: newQuiz});
 
     } catch (error) {
         console.error("Error in loadOrCreateQuiz:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
+        return res.status(500).json({message: "Server error", error: error.message});
     }
 
 }
@@ -189,33 +185,33 @@ export const upsertAcademyQuizXp = async (req, res) => {
         const userId = req.user.userId;
 
         if (!userId) {
-            return res.status(401).json({ message: "Invalid User", error: error.message });
+            return res.status(401).json({message: "Invalid User", error: error.message});
         }
 
-        let progress = await AcademyProgress.findOne({ userId });
+        let progress = await AcademyProgress.findOne({userId});
 
-        const _allQuizzes = await AcademyQuiz.find({ userId }).sort({ createdAt: -1 });
+        const _allQuizzes = await AcademyQuiz.find({userId}).sort({createdAt: -1});
 
         if (_allQuizzes.length > 10) {
             const quizzesToDelete = _allQuizzes.slice(10);
 
             const deleteIds = quizzesToDelete.map(q => q._id);
-            await AcademyQuiz.deleteMany({ _id: { $in: deleteIds } });
+            await AcademyQuiz.deleteMany({_id: {$in: deleteIds}});
         }
 
-        const { quizId } = req.query;
+        const {quizId} = req.query;
         const now = new Date();
         const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
         const allQuizzes = await AcademyQuiz.find({
             userId,
-            end: { $lt: now },
+            end: {$lt: now},
             $or: [
-                { xp: 0 },
-                { xp: { $exists: false } },
-                { xp: null }
+                {xp: 0},
+                {xp: {$exists: false}},
+                {xp: null}
             ]
-        }).sort({ createdAt: -1 }).limit(10);
+        }).sort({createdAt: -1}).limit(10);
 
 
         let totalNewXp = 0;
@@ -247,18 +243,17 @@ export const upsertAcademyQuizXp = async (req, res) => {
 
             for (const q of quiz.questions) {
                 const selected = q.selectedOption;
-                if (selected) {
-                    if (selected.correct === true) {
-                        currentQuizXp += 1;
-                    } else {
-                        currentQuizXp -= 0.2;
-                    }
+
+                if (selected && selected.correct === true) {
+                    currentQuizXp += 1;
+                } else {
+                    currentQuizXp -= 0.2;
                 }
             }
         }
-        // console.log('quiz: ', quiz);
         // console.log('quiz id: ', quizId);
         // console.log('quiz list: ', allQuizzes);
+        // console.log('current xp: ', currentQuizXp);
 
         const quizStartedAt = new Date(quiz?.createdAt ?? now);
         // quizStartedAt.setDate(now.getDate() - 2)
@@ -282,7 +277,7 @@ export const upsertAcademyQuizXp = async (req, res) => {
             if (index !== -1) {
                 progress.lastWeekXp[index].xp += totalNewXp;
             } else {
-                progress.lastWeekXp.push({ day: quizDayUTC, xp: totalNewXp });
+                progress.lastWeekXp.push({day: quizDayUTC, xp: totalNewXp});
             }
 
             progress.lastWeekXp.sort((a, b) => new Date(b.day) - new Date(a.day));
@@ -334,8 +329,8 @@ export const upsertAcademyQuizXp = async (req, res) => {
             progress = await AcademyProgress.create({
                 userName: user?.name || "unKnown",
                 userId,
-                totalXp: totalNewXp,
-                lastWeekXp: [{ day: quizStartedAt, xp: totalNewXp }],
+                totalXp: totalNewXp + currentQuizXp,
+                lastWeekXp: [{day: quizStartedAt, xp: totalNewXp + currentQuizXp}],
                 lastStreakDay: today,
                 streakCount: 1
             });
@@ -348,12 +343,10 @@ export const upsertAcademyQuizXp = async (req, res) => {
                 progress: progress
             }
         });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Failed to fetch challenge", error: error.message });
+    } catch (error) {
+        res.status(500).json({message: "Failed to fetch challenge", error: error.message});
     }
 }
-
 
 
 function sameUtcDay(a, b) {

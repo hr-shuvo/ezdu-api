@@ -47,7 +47,7 @@ export const getAdmissionCategory = async (req, res) => {
         }
 
         if (!result) {
-            return res.status(404).json({ message: "Failed to fetch admission" });
+            return res.status(404).json({ message: "Not found admission" });
         }
 
         const units = await _loadAdmissionCategoryUnit({ categoryId: result._id }, 1, 100);
