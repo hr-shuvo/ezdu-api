@@ -15,7 +15,7 @@ import unitRouter from "./routes/unitRouter.js";
 import lessonRouter from "./routes/lessonRoute.js";
 import challengeRouter from "./routes/challengeRoute.js";
 import userProgressRoute from "./routes/userProgressRoute.js";
-import { seedData } from "./utils/seedData.js";
+import { seedData, seedUserData } from "./utils/seedData.js";
 import academyRouter from "./routes/academyRouter.js";
 import admissionRoute from './routes/academy/admissionRoute.js';
 import challengeProgressRouter from "./routes/challengeProgressRouter.js";
@@ -86,8 +86,9 @@ app.get('/api/v1', (req, res) => {
 });
 // Routers
 app.get('/api/v1/seed', seedData);
+app.get('/api/v1/seedUserData', seedUserData);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/users', authenticateUser, userRouter);
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/modules', authenticateUser, moduleRouter);
 app.use('/api/v1/courses', authenticateUser, courseRoute);
 app.use('/api/v1/units', authenticateUser, unitRouter);

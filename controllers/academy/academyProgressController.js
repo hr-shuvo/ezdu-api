@@ -11,7 +11,16 @@ export const getAcademyProgress = async (req, res) => {
             return res.status(401).json({ message: "Invalid User", error: error.message });
         }
 
-        let progress = await AcademyProgress.findOne({ userId });
+        let progress;
+
+        if (mongoose.Types.ObjectId.isValid(userId)) {
+            progress = await AcademyProgress.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+        } else {
+            progress = await AcademyProgress.findOne({ userName: userId });
+        }
+
+        console.log('---------------------------');
+        console.log(progress);
 
         const now = new Date();
         const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -52,7 +61,7 @@ export const getAcademyProgress = async (req, res) => {
             // await progress.save();
         }
 
-        return res.status(200).json({ data: progress });
+        return res.status(200).json( progress );
     }
     catch (error) {
         res.status(500).json({ message: "Failed to fetch progress", error: error.message });
@@ -68,16 +77,8 @@ export const getAcademyLeaderboard = async (req, res) => {
         const totalUsers = await AcademyProgress.countDocuments();
 
         if (!userId || totalUsers <= 50) {
-            const all = await AcademyProgress.find().limit(50).sort({ totalXp: -1 });
 
-            const leaderboard = all.map((p, i) => ({
-                userId: p.userId,
-                name: p.userName,
-                totalXp: p.totalXp,
-                rank: i + 1,
-                avatar: p.userImageSrc,
-                isCurrentUser: p.userId.toString() === userId
-            }));
+            const leaderboard = await _loadLeaderboard(userId)
 
             return res.json({ data: leaderboard });
         }
@@ -89,7 +90,7 @@ export const getAcademyLeaderboard = async (req, res) => {
             {
                 $setWindowFields: {
                     sortBy: { totalXp: -1 },
-                    output: { rank: { $rank: {} } }
+                    output: { rank: { $documentNumber: {} } }
                 }
             },
             { $match: { userId: objectUserId } },
@@ -97,8 +98,9 @@ export const getAcademyLeaderboard = async (req, res) => {
         ]);
 
         if (userRankResult.length === 0) {
-            // User not found, handle as needed
-            throw new Error("User progress not found");
+            const leaderboard = await _loadLeaderboard(userId)
+
+            return res.json({ data: leaderboard });
         }
 
         const userRank = userRankResult[0].rank;
@@ -107,32 +109,28 @@ export const getAcademyLeaderboard = async (req, res) => {
             {
                 $setWindowFields: {
                     sortBy: { totalXp: -1 },
-                    output: { rank: { $rank: {} } }
+                    output: { rank: { $documentNumber: {} } }
                 }
             },
             {
                 $match: {
-                    rank: { $gte: userRank - 20, $lte: userRank + 20 }
+                    rank: { $gte: userRank - 10, $lte: userRank + 20 }
                 }
             },
             {
                 $sort: { rank: 1 }
-            }
+            },
+            {$limit: 40}
         ]);
 
         const leaderboard = aroundUsers.map(user => ({
             userId: user.userId,
-            name: user.userName,
+            username: user.userName,
             totalXp: user.totalXp,
             rank: user.rank,
+            avatar: user.userImageSrc,
             isCurrentUser: user.userId.toString() === userId.toString()
         }));
-
-
-
-
-
-
 
 
         return res.status(200).json({ data: leaderboard });
@@ -145,7 +143,20 @@ export const getAcademyLeaderboard = async (req, res) => {
 
 
 
+const _loadLeaderboard = async (userId) =>{
+    const all = await AcademyProgress.find().limit(50).sort({ totalXp: -1 });
 
+    const leaderboard = all.map((p, i) => ({
+        userId: p.userId,
+        username: p.userName,
+        totalXp: p.totalXp,
+        rank: i + 1,
+        avatar: p.userImageSrc,
+        isCurrentUser: p.userId.toString() === userId
+    }));
+
+    return leaderboard
+}
 
 
 

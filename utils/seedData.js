@@ -8,6 +8,10 @@ import {
     Unit,
     UserProgress
 } from "../models/CourseModel.js";
+import { User } from "../models/UserModel.js";
+import { hashPassword } from "./passwordUtils.js";
+import mongoose from "mongoose";
+import { AcademyProgress } from "../models/AcademyModel.js";
 
 export const MODULES2 = [
     {
@@ -921,7 +925,7 @@ export const MODULES = [
             {
                 title: 'বাংলা ভাষা ও সাহিত্য',
                 altCode: 'bangla',
-                units:[
+                units: [
                     {
                         title: 'Unit 1',
                         description: 'বাংলা ব্যাকরণ ও সাহিত্য।',
@@ -936,9 +940,9 @@ export const MODULES = [
                                         order: 1,
                                         question: 'নিম্নলিখিত কোনটি একটি বাংলা সংযোজক শব্দ?',
                                         options: [
-                                            { option: 'এবং', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'গিয়ে', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'আমি', correct: false, imageSrc: null, audioSrc: null }
+                                            {option: 'এবং', correct: true, imageSrc: null, audioSrc: null},
+                                            {option: 'গিয়ে', correct: false, imageSrc: null, audioSrc: null},
+                                            {option: 'আমি', correct: false, imageSrc: null, audioSrc: null}
                                         ]
                                     },
                                     {
@@ -946,9 +950,24 @@ export const MODULES = [
                                         order: 2,
                                         question: 'বাংলা ভাষার প্রথম ব্যাকরণ রচয়িতা কে?',
                                         options: [
-                                            { option: 'রাজা রামমোহন রায়', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'নাথানিয়েল ব্রাসি হ্যালহেড', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'ঈশ্বরচন্দ্র বিদ্যাসাগর', correct: false, imageSrc: null, audioSrc: null }
+                                            {
+                                                option: 'রাজা রামমোহন রায়',
+                                                correct: false,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            },
+                                            {
+                                                option: 'নাথানিয়েল ব্রাসি হ্যালহেড',
+                                                correct: true,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            },
+                                            {
+                                                option: 'ঈশ্বরচন্দ্র বিদ্যাসাগর',
+                                                correct: false,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            }
                                         ]
                                     }
                                 ]
@@ -962,9 +981,9 @@ export const MODULES = [
                                         order: 1,
                                         question: 'রবীন্দ্রনাথ ঠাকুরের কোন রচনা নোবেল পুরস্কার পেয়েছিল?',
                                         options: [
-                                            { option: 'গীতাঞ্জলি', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'ঘরে বাইরে', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'রাজর্ষি', correct: false, imageSrc: null, audioSrc: null }
+                                            {option: 'গীতাঞ্জলি', correct: true, imageSrc: null, audioSrc: null},
+                                            {option: 'ঘরে বাইরে', correct: false, imageSrc: null, audioSrc: null},
+                                            {option: 'রাজর্ষি', correct: false, imageSrc: null, audioSrc: null}
                                         ]
                                     }
                                 ]
@@ -978,9 +997,19 @@ export const MODULES = [
                                         order: 1,
                                         question: '"অন্ধকারে ঢিল মারা" বাক্যটির অর্থ কী?',
                                         options: [
-                                            { option: 'অনিশ্চিত কিছু করা', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'কোনো কিছু নষ্ট করা', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'কারো সাহায্য করা', correct: false, imageSrc: null, audioSrc: null }
+                                            {
+                                                option: 'অনিশ্চিত কিছু করা',
+                                                correct: true,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            },
+                                            {
+                                                option: 'কোনো কিছু নষ্ট করা',
+                                                correct: false,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            },
+                                            {option: 'কারো সাহায্য করা', correct: false, imageSrc: null, audioSrc: null}
                                         ]
                                     }
                                 ]
@@ -1001,9 +1030,9 @@ export const MODULES = [
                                         order: 1,
                                         question: '"সুবাস" শব্দের বিপরীত শব্দ কোনটি?',
                                         options: [
-                                            { option: 'দুর্গন্ধ', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'সুন্দর', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'মিষ্টি', correct: false, imageSrc: null, audioSrc: null }
+                                            {option: 'দুর্গন্ধ', correct: true, imageSrc: null, audioSrc: null},
+                                            {option: 'সুন্দর', correct: false, imageSrc: null, audioSrc: null},
+                                            {option: 'মিষ্টি', correct: false, imageSrc: null, audioSrc: null}
                                         ]
                                     }
                                 ]
@@ -1024,9 +1053,14 @@ export const MODULES = [
                                         order: 1,
                                         question: '"পথের পাঁচালী" উপন্যাসের লেখক কে?',
                                         options: [
-                                            { option: 'বিভূতিভূষণ বন্দ্যোপাধ্যায়', correct: true, imageSrc: null, audioSrc: null },
-                                            { option: 'সুকুমার রায়', correct: false, imageSrc: null, audioSrc: null },
-                                            { option: 'সত্যজিৎ রায়', correct: false, imageSrc: null, audioSrc: null }
+                                            {
+                                                option: 'বিভূতিভূষণ বন্দ্যোপাধ্যায়',
+                                                correct: true,
+                                                imageSrc: null,
+                                                audioSrc: null
+                                            },
+                                            {option: 'সুকুমার রায়', correct: false, imageSrc: null, audioSrc: null},
+                                            {option: 'সত্যজিৎ রায়', correct: false, imageSrc: null, audioSrc: null}
                                         ]
                                     }
                                 ]
@@ -1053,9 +1087,9 @@ export const MODULES = [
                                         order: 1,
                                         question: "Which one is a correct English sentence?",
                                         options: [
-                                            { option: "He go to school.", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "He goes to school.", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "Go he school.", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "He go to school.", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "He goes to school.", correct: true, imageSrc: "", audioSrc: ""},
+                                            {option: "Go he school.", correct: false, imageSrc: "", audioSrc: ""}
                                         ]
                                     },
                                     {
@@ -1063,9 +1097,14 @@ export const MODULES = [
                                         order: 2,
                                         question: "Which sentence is in the past tense?",
                                         options: [
-                                            { option: "He is running.", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "He ran yesterday.", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "He will run tomorrow.", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "He is running.", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "He ran yesterday.", correct: true, imageSrc: "", audioSrc: ""},
+                                            {
+                                                option: "He will run tomorrow.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     }
                                 ]
@@ -1079,9 +1118,9 @@ export const MODULES = [
                                         order: 2,
                                         question: "Which word means 'happy'?",
                                         options: [
-                                            { option: "Sad", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "Joyful", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "Angry", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "Sad", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "Joyful", correct: true, imageSrc: "", audioSrc: ""},
+                                            {option: "Angry", correct: false, imageSrc: "", audioSrc: ""}
                                         ]
                                     }
                                 ]
@@ -1102,9 +1141,9 @@ export const MODULES = [
                                         order: 1,
                                         question: "Who is the poet of 'The Road Not Taken'?",
                                         options: [
-                                            { option: "William Shakespeare", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "Robert Frost", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "John Keats", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "William Shakespeare", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "Robert Frost", correct: true, imageSrc: "", audioSrc: ""},
+                                            {option: "John Keats", correct: false, imageSrc: "", audioSrc: ""}
                                         ]
                                     },
                                     {
@@ -1112,9 +1151,14 @@ export const MODULES = [
                                         order: 2,
                                         question: "What is the theme of 'The Raven'?",
                                         options: [
-                                            { option: "Hope and love", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "Grief and loss", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "Adventure and mystery", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "Hope and love", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "Grief and loss", correct: true, imageSrc: "", audioSrc: ""},
+                                            {
+                                                option: "Adventure and mystery",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     }
                                 ]
@@ -1128,9 +1172,9 @@ export const MODULES = [
                                         order: 1,
                                         question: "Who wrote 'Romeo and Juliet'?",
                                         options: [
-                                            { option: "Christopher Marlowe", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "William Shakespeare", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "George Bernard Shaw", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "Christopher Marlowe", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "William Shakespeare", correct: true, imageSrc: "", audioSrc: ""},
+                                            {option: "George Bernard Shaw", correct: false, imageSrc: "", audioSrc: ""}
                                         ]
                                     },
                                     {
@@ -1138,9 +1182,9 @@ export const MODULES = [
                                         order: 2,
                                         question: "What is the genre of 'Macbeth'?",
                                         options: [
-                                            { option: "Comedy", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "Tragedy", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "History", correct: false, imageSrc: "", audioSrc: "" }
+                                            {option: "Comedy", correct: false, imageSrc: "", audioSrc: ""},
+                                            {option: "Tragedy", correct: true, imageSrc: "", audioSrc: ""},
+                                            {option: "History", correct: false, imageSrc: "", audioSrc: ""}
                                         ]
                                     }
                                 ]
@@ -1161,9 +1205,24 @@ export const MODULES = [
                                         order: 1,
                                         question: "Which one is a good essay introduction?",
                                         options: [
-                                            { option: "The internet is really important.", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "The internet has revolutionized the way we communicate, work, and learn, offering both opportunities and challenges.", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "In conclusion, the internet is everywhere.", correct: false, imageSrc: "", audioSrc: "" }
+                                            {
+                                                option: "The internet is really important.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "The internet has revolutionized the way we communicate, work, and learn, offering both opportunities and challenges.",
+                                                correct: true,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "In conclusion, the internet is everywhere.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     },
                                     {
@@ -1171,9 +1230,24 @@ export const MODULES = [
                                         order: 2,
                                         question: "What is the main purpose of a thesis statement in an essay?",
                                         options: [
-                                            { option: "To summarize the essay", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "To present the main argument or point of the essay", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "To introduce the conclusion", correct: false, imageSrc: "", audioSrc: "" }
+                                            {
+                                                option: "To summarize the essay",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "To present the main argument or point of the essay",
+                                                correct: true,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "To introduce the conclusion",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     }
                                 ]
@@ -1187,9 +1261,24 @@ export const MODULES = [
                                         order: 1,
                                         question: "Which one is an example of creative writing?",
                                         options: [
-                                            { option: "A news article about the latest technology.", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "A short story about an adventure in space.", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "A research paper on climate change.", correct: false, imageSrc: "", audioSrc: "" }
+                                            {
+                                                option: "A news article about the latest technology.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "A short story about an adventure in space.",
+                                                correct: true,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "A research paper on climate change.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     },
                                     {
@@ -1197,9 +1286,24 @@ export const MODULES = [
                                         order: 2,
                                         question: "What is important when writing a short story?",
                                         options: [
-                                            { option: "A clear plot, interesting characters, and a strong theme.", correct: true, imageSrc: "", audioSrc: "" },
-                                            { option: "Only having long paragraphs.", correct: false, imageSrc: "", audioSrc: "" },
-                                            { option: "Writing in a formal tone.", correct: false, imageSrc: "", audioSrc: "" }
+                                            {
+                                                option: "A clear plot, interesting characters, and a strong theme.",
+                                                correct: true,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "Only having long paragraphs.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            },
+                                            {
+                                                option: "Writing in a formal tone.",
+                                                correct: false,
+                                                imageSrc: "",
+                                                audioSrc: ""
+                                            }
                                         ]
                                     }
                                 ]
@@ -1231,27 +1335,27 @@ export const seedData = async (req, res) => {
             await ChallengeOption.collection.drop();
 
             console.log('collection dropped');
-        } catch(err) {
+        } catch (err) {
             console.error('Failed to drop collection');
             return res.status(400).json({msg: 'Failed to drop collection'})
         }
 
 
-        for(const module of MODULES) {
+        for (const module of MODULES) {
 
             const _module = await Module.create({
                 title: module.title
             });
 
-            for(const course of module.courses) {
+            for (const course of module.courses) {
                 const _course = await Course.create({
                     title: course.title,
                     moduleId: _module._id
                 });
 
 
-                if(!course.units) continue;
-                for(const unit of course.units) {
+                if (!course.units) continue;
+                for (const unit of course.units) {
                     const _unit = await Unit.create({
                         title: unit.title,
                         description: unit.description,
@@ -1259,15 +1363,15 @@ export const seedData = async (req, res) => {
                         order: 1
                     });
 
-                    for(const lesson of unit.lesson) {
+                    for (const lesson of unit.lesson) {
                         const _lesson = await Lesson.create({
                             title: lesson.title,
                             unitId: _unit._id,
                             order: lesson.order
                         });
 
-                        if(!lesson.challenges) continue;
-                        for(const challenge of lesson.challenges) {
+                        if (!lesson.challenges) continue;
+                        for (const challenge of lesson.challenges) {
 
                             const _challenge = await Challenge.create({
                                 lessonId: _lesson._id,
@@ -1279,7 +1383,7 @@ export const seedData = async (req, res) => {
                             // console.log(challenge);
                             // return res.status(200).json({msg: 'done seeding database!!!'});
 
-                            for(const option of challenge.options) {
+                            for (const option of challenge.options) {
                                 await ChallengeOption.create({
                                     challengeId: _challenge._id,
                                     text: option.option,
@@ -1298,7 +1402,7 @@ export const seedData = async (req, res) => {
 
         }
 
-    } catch(err) {
+    } catch (err) {
         console.error(err);
         return res.status(400).json({msg: 'Failed to seed data'});
     }
@@ -1308,6 +1412,74 @@ export const seedData = async (req, res) => {
 }
 
 
+export const seedUserData = async (req, res) => {
+    try {
+        console.log('Start seeding user data...');
+
+        const totalUsersToCreate = 1_000_000; // 1M
+        const batchSize = 10_000; // insert in chunks
+        const hashedPassword = await hashPassword('1234');
+
+        let createdCount = 0;
+
+        for (let batchStart = 0; batchStart < totalUsersToCreate; batchStart += batchSize) {
+            const users = [];
+            const progresses = [];
+
+            for (let i = batchStart; i < batchStart + batchSize && i < totalUsersToCreate; i++) {
+                const userId = new mongoose.Types.ObjectId();
+
+                users.push({
+                    _id: userId,
+                    name: `User ${i}`,
+                    username: `user${i}`,
+                    email: `user${i}@test.com`,
+                    password: hashedPassword,
+                    isVerified: true,
+                    role: 'user'
+                });
+
+                progresses.push({
+                    userId: userId,
+                    userName: `user${i}`,
+                    streakCount: i % 50, // 0-8
+                    totalXp: i % 100, // 0-999
+                    lastWeekXp: []
+                });
+            }
+
+            try {
+                await User.insertMany(users, { ordered: false });
+            } catch (err) {
+                if (err.code === 11000) {
+                    console.log(`⚠️ Duplicate error in this batch. Some users skipped.`);
+                } else {
+                    console.error(`❌ Unexpected error inserting users:`, err);
+                    throw err;
+                }
+            }
+
+            try {
+                await AcademyProgress.insertMany(progresses, { ordered: false });
+            } catch (err) {
+                console.error(`❌ Error inserting progress:`, err);
+                throw err;
+            }
+
+            createdCount += users.length;
+            console.log(`✅ Inserted approx ${createdCount} users so far...`);
+        }
+
+        const totalUserCount = await User.countDocuments();
+        console.log(`✅ Seeding complete. Total users in DB: ${totalUserCount}`);
+
+        res.json({ message: `${totalUserCount} users seeded successfully` });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
 
 
 

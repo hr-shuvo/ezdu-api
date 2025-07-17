@@ -296,9 +296,9 @@ export const upsertAcademyQuizXp = async (req, res) => {
             ));
 
             const lastStreakDate = new Date(Date.UTC(
-                progress.lastStreakDay.getUTCFullYear(),
-                progress.lastStreakDay.getUTCMonth(),
-                progress.lastStreakDay.getUTCDate()
+                (progress.lastStreakDay || today).getUTCFullYear(),
+                (progress.lastStreakDay || today).getUTCMonth(),
+                (progress.lastStreakDay || today).getUTCDate()
             ));
 
             if (lastStreakDate.getTime() === yesterday.getTime()) {
