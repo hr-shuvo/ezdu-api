@@ -5,7 +5,7 @@ import { User } from "../../models/UserModel.js"
 export const getAcademyProgress = async (req, res) => {
     try {
         const userId = req.query.userId ?? req.user.userId;
-        console.log(userId);
+        // console.log(userId);
 
         if (!userId) {
             return res.status(401).json({ message: "Invalid User", error: error.message });
@@ -19,8 +19,8 @@ export const getAcademyProgress = async (req, res) => {
             progress = await AcademyProgress.findOne({ userName: userId });
         }
 
-        console.log('---------------------------');
-        console.log(progress);
+        // console.log('---------------------------');
+        // console.log(progress);
 
         const now = new Date();
         const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -76,9 +76,11 @@ export const getAcademyLeaderboard = async (req, res) => {
         const userId = req.user?.userId;
         const totalUsers = await AcademyProgress.countDocuments();
 
-        if (!userId || totalUsers <= 50) {
+        const {top} = req.query;
 
-            const leaderboard = await _loadLeaderboard(userId)
+        if (!userId || totalUsers <= 50 || (top && top > 0)) {
+
+            const leaderboard = await _loadLeaderboard(userId, top)
 
             return res.json({ data: leaderboard });
         }
@@ -143,8 +145,8 @@ export const getAcademyLeaderboard = async (req, res) => {
 
 
 
-const _loadLeaderboard = async (userId) =>{
-    const all = await AcademyProgress.find().limit(50).sort({ totalXp: -1 });
+const _loadLeaderboard = async (userId, range = 50) =>{
+    const all = await AcademyProgress.find().limit(range).sort({ totalXp: -1 });
 
     const leaderboard = all.map((p, i) => ({
         userId: p.userId,
